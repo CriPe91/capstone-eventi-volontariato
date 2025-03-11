@@ -1,32 +1,46 @@
 import { Button, Image, Navbar } from "react-bootstrap";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
+import logo from "../assets/GIVE-JOY-LOGO.png";
+import { Link, useLocation } from "react-router-dom";
 
 const MyNavbar = () => {
+  const location = useLocation();
+
   return (
-    <>
-      <Navbar bg="primary" data-bs-theme="dark">
-        <Container>
-          <Navbar.Brand href="#home">
-            <Image src="../assets/GIVE-JOY-LOGO.png" />
-            GIVE JOY
-          </Navbar.Brand>
-          <Nav className="ms-auto">
-            <Nav.Link href="#home">Home</Nav.Link>
-            <Nav.Link href="#features">Ospedali</Nav.Link>
-            <Nav.Link href="#pricing" className="me-2">
+    <Navbar id="main-navbar" fixed="top" expand="lg" className="bg-primary">
+      <Container fluid>
+        <Navbar.Brand as={Link} to="/" className="d-flex align-items-center">
+          <Image src={logo} alt="Give Joy Logo" width={80} height={80} className="me-3 rounded-circle" />
+          <span className="fw-semibold text-light fs-2">
+            GIVE <Image src="https://cdn-icons-png.flaticon.com/128/7399/7399362.png" width={40} height={40} /> JOY
+          </span>
+        </Navbar.Brand>
+        <Navbar.Toggle aria-controls="navbarScroll" />
+        <Navbar.Collapse id="navbarScroll">
+          <Nav className="me-auto my-2 my-lg-0" style={{ maxHeight: "200px" }} navbarScroll>
+            <Link className={`nav-link text-light ${location.pathname === "/" ? "active" : ""} fs-5`} to="/">
+              Home
+            </Link>
+            <Link className={`nav-link text-light ${location.pathname === "/ospedali" ? "active" : ""} fs-5`} to="/ospedali">
+              Ospedali
+            </Link>
+            <Link className={`nav-link text-light ${location.pathname === "/eventi" ? "active" : ""} fs-5`} to="/eventi">
               Eventi
-            </Nav.Link>
-            <Button className="btn signup-btn mb-2 me-1" type="button">
-              <p className="m-0">Sign Up</p>
-            </Button>
-            <Button className="btn login-btn mb-2" type="button">
-              <p className="m-0">Login</p>
-            </Button>
+            </Link>
           </Nav>
-        </Container>
-      </Navbar>
-    </>
+
+          <div>
+            <Button variant="outline-light" className="fw-semibold me-2">
+              Sign Up
+            </Button>
+            <Button variant="light" className="fw-semibold">
+              Login
+            </Button>
+          </div>
+        </Navbar.Collapse>
+      </Container>
+    </Navbar>
   );
 };
 
