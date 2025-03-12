@@ -8,17 +8,17 @@ const MyNavbar = () => {
   const location = useLocation();
 
   return (
-    <Navbar id="main-navbar" fixed="top" expand="lg" className="bg-primary">
+    <Navbar id="main-navbar" sticky="top" expand="lg" className="bg-primary">
       <Container fluid>
         <Navbar.Brand as={Link} to="/" className="d-flex align-items-center">
           <Image src={logo} alt="Give Joy Logo" width={80} height={80} className="me-3 rounded-circle" />
           <span className="fw-semibold text-light fs-2">
-            GIVE <Image src="https://cdn-icons-png.flaticon.com/128/7399/7399362.png" width={40} height={40} /> JOY
+            GIVE <Image src="https://cdn-icons-png.flaticon.com/128/7399/7399355.png" width={40} height={40} /> JOY
           </span>
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="navbarScroll" />
         <Navbar.Collapse id="navbarScroll">
-          <Nav className="me-auto my-2 my-lg-0" style={{ maxHeight: "200px" }} navbarScroll>
+          <Nav className="me-auto my-2 my-lg-0" style={{ maxHeight: "100px" }} navbarScroll>
             <Link className={`nav-link text-light ${location.pathname === "/" ? "active" : ""} fs-5`} to="/">
               Home
             </Link>
