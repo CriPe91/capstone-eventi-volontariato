@@ -2,13 +2,19 @@ import { useEffect, useState } from "react";
 import { Card, Col, Container, Row } from "react-bootstrap";
 import { http } from "../../shared/utils/http";
 
-const Ospedali = () => {
-  /**const [name, setName] = useState("Mario");
+/**const [name, setName] = useState("Mario");
  const changeName = () => {
     setName("cristian");
     console.log(name);
   };**/
+/**return (
+    <div>
+      <button onClick={changeName}>Cambia nome</button>
+      <h1>PAGINA OSPEDALI {name}</h1>
+    </div>
+  );**/
 
+const Ospedali = () => {
   const [ospedali, setOspedali] = useState([]);
 
   const getAllOspedali = async () => {
@@ -20,7 +26,6 @@ const Ospedali = () => {
       }
 
       const data = await response.json();
-      console.log("Dati ricevuti:", data); // In console ci da i dati ricevuti
       setOspedali(data); // Imposta direttamente l'array di ospedali
     } catch (error) {
       console.error("Errore nella fetch:", error);
@@ -59,18 +64,5 @@ const Ospedali = () => {
       </Row>
     </Container>
   );
-
-  /**return (
-    <div>
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <button onClick={changeName}>Cambia nome</button>
-      <h1>PAGINA OSPEDALI {name}</h1>
-    </div>
-  );**/
 };
 export default Ospedali;
