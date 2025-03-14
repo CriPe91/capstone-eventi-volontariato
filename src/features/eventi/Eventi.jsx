@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { Card, Col, Container, Row } from "react-bootstrap";
+import { Button, Card, Col, Container, Row, Spinner } from "react-bootstrap";
 import { http } from "../../shared/utils/http";
 
 const Eventi = () => {
   const [eventi, setEventi] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const getAllEventi = async () => {
     try {
@@ -18,6 +19,8 @@ const Eventi = () => {
       setEventi(data.content || []); // Estraggo correttamente gli eventi da content(JSON SU POSTMAN) data.content
     } catch (error) {
       console.error("Errore nella fetch:", error);
+    } finally {
+      setLoading(false); // Una volta finita la fetch, disattiviamo il caricamento
     }
   };
 
@@ -27,28 +30,47 @@ const Eventi = () => {
 
   return (
     <Container id="eventi-container" className="mt-5">
-      <h1 className="text-center text-primary">Eventi in Programma</h1>
-      <Row xs={1} md={3} lg={3} className="mt-4 justify-content-center">
-        {eventi.length > 0 ? (
+      <h1 className="text-center text-primary">Eventi Disponibili</h1>
+      <Row className="mt-4 justify-content-center g-4">
+        {" "}
+        {loading ? (
+          <Col className="text-center mt-5">
+            <Spinner animation="border" role="status" variant="primary" size="lg">
+              <span className="visually-hidden">Caricamento...</span>
+            </Spinner>
+            <p className="mt-2 text-primary fw-bold">Caricamento in corso...</p>
+          </Col>
+        ) : eventi.length > 0 ? (
           eventi.map((evento) => (
-            <Col key={evento.id}>
-              <Card className="shadow-lg p-3 mb-4 h-90">
-                {/* Immagine con altezza fissa */}
-                <Card.Img variant="top" src={evento.imgEvento} alt={evento.titolo} className="rounded" style={{ height: "200px", objectFit: "contain" }} />
+            <Col key={evento.id} xs={12} md={6} lg={4} className="d-flex">
+              {" "}
+              <Card className="shadow-lg p-3 mb-4 d-flex flex-column h-100">
+                {" "}
+                {/*  Altezza uniforme */}
+                <Card.Img
+                  variant="top"
+                  src={evento.imgEvento}
+                  alt={evento.titolo}
+                  className="rounded"
+                  style={{ height: "250px", objectFit: "cover", width: "100%" }}
+                />
                 <Card.Body className="d-flex flex-column">
                   <Card.Title className="text-primary">{evento.titolo}</Card.Title>
-                  <Card.Text className="flex-grow-1">
+                  <Card.Text>
                     📅 <strong>Data:</strong> {evento.data} <br />
-                    🏥 <strong>Ospedale:</strong> {evento.ospedale ? evento.ospedale.nome : "Non disponibile"} <br />
+                    🏥 <strong>Ospedale:</strong> {evento.ospedale.nome} <br />
                     📝 <strong>Descrizione:</strong> {evento.descrizione}
                   </Card.Text>
+                  <Button variant="primary" className="mt-auto w-100">
+                    Prenota Evento
+                  </Button>{" "}
                 </Card.Body>
               </Card>
             </Col>
           ))
         ) : (
           <Col>
-            <p className="text-center">Caricamento in corso...</p>
+            <p className="text-center text-danger fw-bold">Nessun evento disponibile.</p>
           </Col>
         )}
       </Row>

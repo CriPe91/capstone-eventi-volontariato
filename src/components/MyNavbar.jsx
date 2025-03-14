@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button, Image, Navbar, Container, Nav } from "react-bootstrap";
 import { Link, useLocation } from "react-router-dom";
-import logo from "../assets/GIVE-JOY-LOGO.png";
+import logo from "../assets/LogoGiveJoy.svg";
 import SignUpModal from "./SignUpModal";
 import LoginModal from "./LoginModal";
 
@@ -15,7 +15,7 @@ const MyNavbar = () => {
       <Navbar sticky="top" expand="lg" className="bg-primary">
         <Container fluid>
           <Navbar.Brand as={Link} to="/" className="d-flex align-items-center">
-            <Image src={logo} alt="Give Joy Logo" width={80} height={80} className="me-3 rounded-circle " />
+            <Image src={logo} alt="LogoGiveJoy" width={110} height={110} className="me-3 " />
             <span className="fw-semibold text-light fs-2">
               GIVE <Image src="https://cdn-icons-png.flaticon.com/128/7399/7399355.png" width={40} height={40} /> JOY
             </span>
