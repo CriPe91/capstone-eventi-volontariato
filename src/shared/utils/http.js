@@ -1,7 +1,7 @@
 const urlBase = "http://localhost:8080/";
 export const http = {
-  get: (url, config) => {
-    return fetch(urlBase + url);
+  getAuth: (url, config) => {
+    return fetch(urlBase + url, config).then((res) => res.json());
   },
   post: (url, data, config) => {
     console.log({
@@ -18,5 +18,8 @@ export const http = {
       },
       body: JSON.stringify(data),
     });
+  },
+  get: (url, config) => {
+    return fetch(urlBase + url);
   },
 };

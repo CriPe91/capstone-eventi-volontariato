@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import { http } from "../shared/utils/http";
 import { useDispatch } from "react-redux";
-import { setToken } from "../redux/authSlice";
+import { autoLogin, setToken } from "../redux/authSlice";
 
 const LoginModal = ({ show, handleClose }) => {
   const initialFormState = { email: "", password: "" };
@@ -42,6 +42,7 @@ const LoginModal = ({ show, handleClose }) => {
       console.log(data);
 
       dispatch(setToken(data.token));
+      dispatch(autoLogin());
       handleClose();
     }
   };

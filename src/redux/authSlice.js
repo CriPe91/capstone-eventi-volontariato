@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { http } from "../shared/utils/http";
 
 const initialState = {
   user: undefined,
@@ -31,6 +32,19 @@ export const authSlice = createSlice({
 });
 
 export const { setUser, resetUser, setInit, setToken, resetToken } = authSlice.actions;
+
+export const autoLogin = () => (dispatch) => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    http
+      .getAuth("user/me", {
+        headers: { Authorization: "Bearer " + token, "Content-Type": "application/json" },
+      })
+      .then((res) => {
+        dispatch(setUser(res));
+      });
+  }
+};
 
 export const selectUser = (state) => state.auth.user;
 export const selectInit = (state) => state.auth.init;

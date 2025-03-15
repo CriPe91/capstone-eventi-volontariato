@@ -4,11 +4,14 @@ import { Link, useLocation } from "react-router-dom";
 import logo from "../assets/LogoGiveJoy.svg";
 import SignUpModal from "./SignUpModal";
 import LoginModal from "./LoginModal";
+import { useSelector } from "react-redux";
+import { selectUser } from "../redux/authSlice";
 
 const MyNavbar = () => {
   const location = useLocation();
   const [showSignUp, setShowSignUp] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
+  const user = useSelector(selectUser);
 
   return (
     <>
@@ -34,14 +37,16 @@ const MyNavbar = () => {
               </Link>
             </Nav>
 
-            <div>
-              <Button variant="outline-light" className="fw-semibold me-2" onClick={() => setShowSignUp(true)}>
-                Sign Up
-              </Button>
-              <Button variant="outline-light" className="fw-semibold" onClick={() => setShowLogin(true)}>
-                Login
-              </Button>
-            </div>
+            {!user && (
+              <div>
+                <Button variant="outline-light" className="fw-semibold me-2" onClick={() => setShowSignUp(true)}>
+                  Sign Up
+                </Button>
+                <Button variant="outline-light" className="fw-semibold" onClick={() => setShowLogin(true)}>
+                  Login
+                </Button>
+              </div>
+            )}
           </Navbar.Collapse>
         </Container>
       </Navbar>
