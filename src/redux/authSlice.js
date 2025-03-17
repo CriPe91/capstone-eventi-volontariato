@@ -46,6 +46,22 @@ export const autoLogin = () => (dispatch) => {
   }
 };
 
+export const registerUser = (userData) => async (dispatch) => {
+  try {
+    const response = await http.postAuth("user/register", userData);
+
+    if (!response.ok) {
+      throw new Error("Errore nella registrazione");
+    }
+
+    const data = await response.json();
+    dispatch(setToken(data.token)); // Salviamo il token
+    dispatch(autoLogin()); // Auto-login dopo la registrazione
+  } catch (error) {
+    console.error("Errore nella registrazione:", error);
+  }
+};
+
 export const selectUser = (state) => state.auth.user;
 export const selectInit = (state) => state.auth.init;
 

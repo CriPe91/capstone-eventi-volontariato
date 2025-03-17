@@ -4,21 +4,27 @@ import { Link, useLocation } from "react-router-dom";
 import logo from "../assets/LogoGiveJoy.svg";
 import SignUpModal from "./SignUpModal";
 import LoginModal from "./LoginModal";
-import { useSelector } from "react-redux";
-import { selectUser } from "../redux/authSlice";
+import { useSelector, useDispatch } from "react-redux";
+import { selectUser, resetToken, resetUser } from "../redux/authSlice";
 
 const MyNavbar = () => {
   const location = useLocation();
+  const dispatch = useDispatch();
   const [showSignUp, setShowSignUp] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
-  const user = useSelector(selectUser);
+  const user = useSelector(selectUser); // Recuperiamo l'utente da Redux
+
+  const handleLogout = () => {
+    dispatch(resetToken()); // Rimuove il token dal localStorage
+    dispatch(resetUser()); // Resetta l'utente nello store
+  };
 
   return (
     <>
       <Navbar sticky="top" expand="lg" className="bg-primary">
         <Container fluid>
           <Navbar.Brand as={Link} to="/" className="d-flex align-items-center">
-            <Image src={logo} alt="LogoGiveJoy" width={110} height={110} className="me-3 " />
+            <Image src={logo} alt="LogoGiveJoy" width={110} height={110} className="me-3" />
             <span className="fw-semibold text-light fs-2">
               GIVE <Image src="https://cdn-icons-png.flaticon.com/128/7399/7399355.png" width={40} height={40} /> JOY
             </span>
@@ -37,7 +43,15 @@ const MyNavbar = () => {
               </Link>
             </Nav>
 
-            {!user && (
+            {/* Se l'utente è autenticato, mostriamo il nome e il bottone Logout */}
+            {user ? (
+              <div className="d-flex align-items-center">
+                <span className="text-light fw-semibold fs-5 me-3">👋 Benvenuto, {user.nome}!</span>
+                <Button variant="outline-light" className="fw-semibold" onClick={handleLogout}>
+                  Logout
+                </Button>
+              </div>
+            ) : (
               <div>
                 <Button variant="outline-light" className="fw-semibold me-2" onClick={() => setShowSignUp(true)}>
                   Sign Up
@@ -51,7 +65,7 @@ const MyNavbar = () => {
         </Container>
       </Navbar>
 
-      {/* Modali */}
+      {/* Modali per SignUp e Login */}
       <SignUpModal show={showSignUp} handleClose={() => setShowSignUp(false)} />
       <LoginModal show={showLogin} handleClose={() => setShowLogin(false)} />
     </>

@@ -1,10 +1,15 @@
 import { useEffect, useState } from "react";
-import { Card, Col, Container, Row, Spinner } from "react-bootstrap";
+import { Card, Col, Container, Row, Spinner, Button } from "react-bootstrap";
 import { http } from "../../shared/utils/http";
+import { Link, useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { selectUser } from "../../redux/authSlice";
 
 const Ospedali = () => {
   const [ospedali, setOspedali] = useState([]);
   const [loading, setLoading] = useState(true);
+  const location = useLocation();
+  const user = useSelector(selectUser); // Otteniamo i dati dell'utente autenticato
 
   const getAllOspedali = async () => {
     try {
@@ -20,7 +25,7 @@ const Ospedali = () => {
     } catch (error) {
       console.error("Errore nella fetch:", error);
     } finally {
-      setLoading(false); // Una volta finita la fetch, disattiviamo il caricamento
+      setLoading(false);
     }
   };
 
@@ -30,7 +35,19 @@ const Ospedali = () => {
 
   return (
     <Container id="ospedali-container" className="mt-5">
-      <h1 className="text-center text-primary">Ospedali Disponibili</h1>
+      <div className="d-flex justify-content-between align-items-center">
+        <h1 className="text-primary">Ospedali Disponibili</h1>
+
+        {/* Mostriamo il pulsante solo se l'utente è Admin */}
+        {user?.isAdmin && location.pathname === "/ospedali" && (
+          <Link to="/backoffice-ospedali">
+            <Button variant="warning" className="fw-semibold">
+              🛠️ Gestisci
+            </Button>
+          </Link>
+        )}
+      </div>
+
       <Row className="mt-4 justify-content-center g-4">
         {loading ? (
           <Col className="text-center mt-5">
@@ -43,8 +60,6 @@ const Ospedali = () => {
           ospedali.map((ospedale) => (
             <Col key={ospedale.id} xs={12} md={6} lg={4} className="d-flex">
               <Card className="shadow-lg p-3 mb-4 d-flex flex-column h-100">
-                {" "}
-                {/* ✅ Altezza uniforme */}
                 <Card.Img
                   variant="top"
                   src={ospedale.imgOspedale}

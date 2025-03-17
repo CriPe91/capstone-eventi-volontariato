@@ -9,12 +9,14 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import HomePage from "./features/home/HomePage";
 import Ospedali from "./features/ospedali/Ospedali";
 import Eventi from "./features/eventi/Eventi";
+import BackOfficeOspedali from "./features/GestionaliAdmin/BackOfficeOspedali";
 
 function App() {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(autoLogin());
   }, []);
+
   return (
     <BrowserRouter>
       <MyNavbar />
@@ -22,8 +24,8 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/ospedali" element={<Ospedali />} />
         <Route path="/eventi" element={<Eventi />} />
+        <Route path="/backoffice-ospedali" element={<BackOfficeOspedali />} />
       </Routes>
-
       <Footer />
     </BrowserRouter>
   );

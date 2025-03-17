@@ -1,12 +1,15 @@
 import { useState, useEffect } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
+import { http } from "../shared/utils/http";
+import { useDispatch } from "react-redux";
+import { setToken, autoLogin } from "../redux/authSlice";
 
 const SignUpModal = ({ show, handleClose }) => {
   const initialFormState = { nome: "", cognome: "", email: "", password: "" };
   const [formData, setFormData] = useState(initialFormState);
   const [errors, setErrors] = useState({});
+  const dispatch = useDispatch();
 
-  // Reset dei campi quando il modale si chiude
   useEffect(() => {
     if (!show) setFormData(initialFormState);
   }, [show]);
@@ -26,11 +29,26 @@ const SignUpModal = ({ show, handleClose }) => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (validate()) {
-      setFormData(initialFormState); // Resetta i campi dopo l'invio
-      handleClose();
+      // console.log(formData); // Debug
+      try {
+        const response = await http.post("user/register", formData);
+
+        if (!response.ok) {
+          throw new Error("Errore nella registrazione");
+        }
+
+        const data = await response.json();
+        // console.log(data); // Debug: vedere cosa torna la registrazione
+
+        dispatch(setToken(data.token)); // Salviamo il token
+        dispatch(autoLogin()); // Auto-login dopo la registrazione
+        handleClose();
+      } catch (error) {
+        console.error("Errore durante la registrazione:", error);
+      }
     }
   };
 

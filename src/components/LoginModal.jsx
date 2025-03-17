@@ -31,7 +31,7 @@ const LoginModal = ({ show, handleClose }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (validate()) {
-      console.log(formData);
+      // console.log(formData);
       /* debugger; */
       const response = await http.post("user/login", formData);
       if (!response.ok) {
@@ -39,7 +39,7 @@ const LoginModal = ({ show, handleClose }) => {
       }
       const data = await response.json();
 
-      console.log(data);
+      // console.log(data);
 
       dispatch(setToken(data.token));
       dispatch(autoLogin());
