@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Table, Button, Container, Spinner, Modal, Form } from "react-bootstrap";
+import { Table, Button, Container, Spinner, Modal, Form, Row, Col } from "react-bootstrap";
 import { http } from "../../shared/utils/http";
 import { Link } from "react-router-dom";
 
@@ -15,12 +15,8 @@ const BackOfficeOspedali = () => {
   const getAllOspedali = async () => {
     try {
       const response = await http.get("ospedali");
-
-      if (!response.ok) {
-        throw new Error("Errore nel caricamento degli ospedali");
-      }
-
       const data = await response.json();
+
       setOspedali(data || []);
     } catch (error) {
       console.error("Errore nella fetch:", error);
@@ -35,18 +31,46 @@ const BackOfficeOspedali = () => {
 
   // Funzione per creare un nuovo ospedale
   const handleCreateOspedale = async () => {
-    try {
+    /* try {
       const formData = new FormData();
       formData.append("dati", JSON.stringify({ nome: newOspedale.nome, indirizzo: newOspedale.indirizzo, email: newOspedale.email }));
       if (newOspedale.imgOspedale) {
         formData.append("imgOspedale", newOspedale.imgOspedale);
       }
 
-      const response = await http.post("ospedali/newOspedale", formData, { headers: { "Content-Type": "multipart/form-data" } });
+      await http.postFormDataAuth("ospedali/newOspedale", formData);
 
-      if (!response.ok) {
-        throw new Error("Errore nella creazione dell'ospedale");
+      setShowCreate(false);
+      getAllOspedali();
+    } catch (error) {
+      console.error("Errore nella creazione:", error);
+    } */
+
+    try {
+      const formData = new FormData();
+      const jsonBlob = new Blob(
+        [
+          JSON.stringify({
+            nome: newOspedale.nome,
+            indirizzo: newOspedale.indirizzo,
+            email: newOspedale.email,
+          }),
+        ],
+        { type: "application/json" }
+      );
+      // Aggiungiamo i dati come stringa JSON
+      formData.append("dati", jsonBlob);
+
+      // Aggiungiamo l'immagine solo se è presente
+      if (newOspedale.imgOspedale) {
+        formData.append("imgOspedale", newOspedale.imgOspedale);
       }
+
+      console.log("🔹 FormData inviato:", [...formData.entries()]); // Debugging
+
+      const response = await http.postFormDataAuth("ospedali/newOspedale", formData);
+
+      console.log("Risposta del server:", response);
 
       setShowCreate(false);
       getAllOspedali();
@@ -58,15 +82,11 @@ const BackOfficeOspedali = () => {
   // Funzione per modificare un ospedale
   const handleEditOspedale = async () => {
     try {
-      const response = await http.put(`ospedali/${editingOspedale.id}`, {
+      await http.putAuth(`ospedali/${editingOspedale.id}`, {
         nome: editingOspedale.nome,
         indirizzo: editingOspedale.indirizzo,
         email: editingOspedale.email,
       });
-
-      if (!response.ok) {
-        throw new Error("Errore nella modifica dell'ospedale");
-      }
 
       setShowEdit(false);
       getAllOspedali();
@@ -79,12 +99,7 @@ const BackOfficeOspedali = () => {
   const handleDeleteOspedale = async (id) => {
     if (window.confirm("Sei sicuro di voler eliminare questo ospedale?")) {
       try {
-        const response = await http.delete(`ospedali/${id}`);
-
-        if (!response.ok) {
-          throw new Error("Errore nell'eliminazione dell'ospedale");
-        }
-
+        await http.deleteAuth(`ospedali/${id}`);
         getAllOspedali();
       } catch (error) {
         console.error("Errore nella cancellazione:", error);
@@ -95,19 +110,21 @@ const BackOfficeOspedali = () => {
   return (
     <Container className="mt-5">
       {/* Titolo e pulsante per tornare alla pagina ospedali */}
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <h1 className="text-primary">Gestione Ospedali</h1>
-        <div>
-          <Button variant="info" className="me-2 text-light" onClick={() => setShowCreate(true)}>
+      <Row className="d-flex justify-content-between align-items-center mb-4">
+        <Col>
+          <h1 className="text-primary">Gestione Ospedali</h1>
+        </Col>
+        <Col className="d-flex justify-content-end">
+          <Button variant="primary" className="me-2 text-light" onClick={() => setShowCreate(true)}>
             ➕ Aggiungi Ospedale
           </Button>
           <Link to="/ospedali">
-            <Button variant="info" className="text-light">
+            <Button variant="secondary" className="text-light">
               ⬅️ Torna agli Ospedali
             </Button>
           </Link>
-        </div>
-      </div>
+        </Col>
+      </Row>
 
       {/* Se i dati sono in caricamento, mostra Spinner */}
       {loading ? (
@@ -118,8 +135,7 @@ const BackOfficeOspedali = () => {
       ) : (
         <Table striped bordered hover responsive className="mt-4">
           <thead>
-            <tr style={{ backgroundColor: "#1da1f2" }}>
-              {" "}
+            <tr style={{ backgroundColor: "#d9eaff" }}>
               <th>ID</th>
               <th>Nome</th>
               <th>Indirizzo</th>
@@ -129,7 +145,7 @@ const BackOfficeOspedali = () => {
           </thead>
           <tbody>
             {ospedali.map((ospedale) => (
-              <tr key={ospedale.id} className="bg-primary">
+              <tr key={ospedale.id}>
                 <td>{ospedale.id}</td>
                 <td>{ospedale.nome}</td>
                 <td>{ospedale.indirizzo}</td>
@@ -137,7 +153,7 @@ const BackOfficeOspedali = () => {
                 <td>
                   <div className="d-flex gap-2">
                     <Button
-                      variant="warning"
+                      variant="outline-warning"
                       size="sm"
                       onClick={() => {
                         setEditingOspedale(ospedale);
@@ -146,7 +162,7 @@ const BackOfficeOspedali = () => {
                     >
                       ✏️
                     </Button>
-                    <Button variant="danger" size="sm" onClick={() => handleDeleteOspedale(ospedale.id)}>
+                    <Button variant="outline-danger" size="sm" onClick={() => handleDeleteOspedale(ospedale.id)}>
                       🗑️
                     </Button>
                   </div>
@@ -183,7 +199,7 @@ const BackOfficeOspedali = () => {
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="info" className="text-light" onClick={handleCreateOspedale}>
+          <Button variant="primary" className="text-light" onClick={handleCreateOspedale}>
             Salva
           </Button>
         </Modal.Footer>
@@ -200,10 +216,22 @@ const BackOfficeOspedali = () => {
               <Form.Label>Nome</Form.Label>
               <Form.Control type="text" value={editingOspedale?.nome} onChange={(e) => setEditingOspedale({ ...editingOspedale, nome: e.target.value })} />
             </Form.Group>
+            <Form.Group>
+              <Form.Label>Indirizzo</Form.Label>
+              <Form.Control
+                type="text"
+                value={editingOspedale?.indirizzo}
+                onChange={(e) => setEditingOspedale({ ...editingOspedale, indirizzo: e.target.value })}
+              />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Email</Form.Label>
+              <Form.Control type="email" value={editingOspedale?.email} onChange={(e) => setEditingOspedale({ ...editingOspedale, email: e.target.value })} />
+            </Form.Group>
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="info" className="text-light" onClick={handleEditOspedale}>
+          <Button variant="primary" className="text-light" onClick={handleEditOspedale}>
             Modifica
           </Button>
         </Modal.Footer>

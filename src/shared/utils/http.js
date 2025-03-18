@@ -1,17 +1,19 @@
 const urlBase = "http://localhost:8080/";
+
+/* const getConfig = (config = {}) => {
+
+  const token = localStorage.getItem("token")
+
+  return{
+    ...config, 
+    headers : {
+      Authorization : "Bearer " + token,
+    }
+  };
+}; */
 export const http = {
   getAuth: (url, config) => {
     return fetch(urlBase + url, config).then((res) => res.json());
-  },
-  postAuth: (url, data, config) => {
-    return fetch(urlBase + url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-      ...config,
-    }).then((res) => res.json());
   },
   post: (url, data, config) => {
     /*  console.log({
@@ -34,18 +36,39 @@ export const http = {
   },
 
   // METODI PER IL BACKOFFICE(ADMIN)
-  postFormDataAuth: (url, formData) => {
-    return fetch(urlBase + url, {
+  postAuth: async (url, data, config) => {
+    const response = await fetch(urlBase + url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+      ...config,
+    });
+
+    if (!response.ok) throw new Error("Errore nella richiesta POST");
+
+    return response.headers.get("content-type")?.includes("application/json") ? response.json() : response.text();
+  },
+
+  postFormDataAuth: async (url, formData) => {
+    const response = await fetch(urlBase + url, {
       method: "POST",
       headers: {
         Authorization: "Bearer " + localStorage.getItem("token"),
       },
-      body: formData,
-    }).then((res) => res.json());
+      body: formData, //Non impostiamo Content-Type manualmente
+    });
+
+    console.log(" Status della risposta:", response.status);
+
+    if (!response.ok) throw new Error(`Errore nella richiesta POST FormData - Status: ${response.status}`);
+
+    return response.headers.get("content-type")?.includes("application/json") ? response.json() : response.text();
   },
 
-  putAuth: (url, data, config) => {
-    return fetch(urlBase + url, {
+  putAuth: async (url, data, config) => {
+    const response = await fetch(urlBase + url, {
       method: "PUT",
       headers: {
         Authorization: "Bearer " + localStorage.getItem("token"),
@@ -53,26 +76,39 @@ export const http = {
       },
       body: JSON.stringify(data),
       ...config,
-    }).then((res) => res.json());
+    });
+
+    if (!response.ok) throw new Error("Errore nella richiesta PUT");
+
+    return response.headers.get("content-type")?.includes("application/json") ? response.json() : response.text();
   },
 
-  deleteAuth: (url, config) => {
-    return fetch(urlBase + url, {
+  deleteAuth: async (url, config) => {
+    const response = await fetch(urlBase + url, {
       method: "DELETE",
       headers: {
         Authorization: "Bearer " + localStorage.getItem("token"),
         "Content-Type": "application/json",
       },
       ...config,
-    }).then((res) => res.json());
+    });
+
+    if (!response.ok) throw new Error("Errore nella richiesta DELETE");
+
+    return response.headers.get("content-type")?.includes("application/json") ? response.json() : response.text();
   },
-  getWithParams: (url, params) => {
+
+  getWithParams: async (url, params) => {
     const query = new URLSearchParams(params).toString();
-    return fetch(`${urlBase}${url}?${query}`, {
+    const response = await fetch(`${urlBase}${url}?${query}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
       },
-    }).then((res) => res.json());
+    });
+
+    if (!response.ok) throw new Error("Errore nella richiesta GET");
+
+    return response.headers.get("content-type")?.includes("application/json") ? response.json() : response.text();
   },
 };

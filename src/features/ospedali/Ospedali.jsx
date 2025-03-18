@@ -13,13 +13,13 @@ const Ospedali = () => {
 
   const getAllOspedali = async () => {
     try {
-      const response = await http.get("ospedali");
+      const data = await http.getAuth("ospedali");
 
-      if (!response.ok) {
+      /* if (!response.ok) {
         throw new Error("Errore nel caricamento degli ospedali");
-      }
+      } */
 
-      const data = await response.json();
+      /* const data = await response.json(); */
 
       setOspedali(data || []);
     } catch (error) {
