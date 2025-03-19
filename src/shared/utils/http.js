@@ -16,13 +16,6 @@ export const http = {
     return fetch(urlBase + url, config).then((res) => res.json());
   },
   post: (url, data, config) => {
-    /*  console.log({
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    }); */
     return fetch(urlBase + url, {
       method: "POST",
       headers: {
@@ -48,7 +41,7 @@ export const http = {
 
     if (!response.ok) throw new Error("Errore nella richiesta POST");
 
-    return response.headers.get("content-type")?.includes("application/json") ? response.json() : response.text();
+    return response.json();
   },
 
   postFormDataAuth: async (url, formData) => {
@@ -57,14 +50,14 @@ export const http = {
       headers: {
         Authorization: "Bearer " + localStorage.getItem("token"),
       },
-      body: formData, //Non impostiamo Content-Type manualmente
+      body: formData, // Non impostiamo il Content-Type manualmente
     });
 
-    console.log(" Status della risposta:", response.status);
+    /* console.log("Status della risposta:", response.status); */
 
     if (!response.ok) throw new Error(`Errore nella richiesta POST FormData - Status: ${response.status}`);
 
-    return response.headers.get("content-type")?.includes("application/json") ? response.json() : response.text();
+    return response.json();
   },
 
   putAuth: async (url, data, config) => {
@@ -80,7 +73,7 @@ export const http = {
 
     if (!response.ok) throw new Error("Errore nella richiesta PUT");
 
-    return response.headers.get("content-type")?.includes("application/json") ? response.json() : response.text();
+    return response.json();
   },
 
   deleteAuth: async (url, config) => {
@@ -95,7 +88,7 @@ export const http = {
 
     if (!response.ok) throw new Error("Errore nella richiesta DELETE");
 
-    return response.headers.get("content-type")?.includes("application/json") ? response.json() : response.text();
+    return response.json();
   },
 
   getWithParams: async (url, params) => {
@@ -109,6 +102,6 @@ export const http = {
 
     if (!response.ok) throw new Error("Errore nella richiesta GET");
 
-    return response.headers.get("content-type")?.includes("application/json") ? response.json() : response.text();
+    return response.json();
   },
 };

@@ -1,26 +1,25 @@
 import { useEffect, useState } from "react";
 import { Button, Card, Col, Container, Row, Spinner } from "react-bootstrap";
 import { http } from "../../shared/utils/http";
+import { useSelector } from "react-redux";
+import { selectUser } from "../../redux/authSlice";
+import { Link, useLocation } from "react-router-dom";
 
 const Eventi = () => {
   const [eventi, setEventi] = useState([]);
   const [loading, setLoading] = useState(true);
+  const user = useSelector(selectUser);
+  const location = useLocation();
 
+  // Funzione per ottenere tutti gli eventi
   const getAllEventi = async () => {
     try {
-      const response = await http.get("eventi");
-
-      if (!response.ok) {
-        throw new Error("Errore nel caricamento degli eventi");
-      }
-
-      const data = await response.json();
-
-      setEventi(data.content || []); // Estraggo correttamente gli eventi da content(JSON SU POSTMAN) data.content
+      const data = await http.getAuth("eventi");
+      setEventi(data.content || []);
     } catch (error) {
       console.error("Errore nella fetch:", error);
     } finally {
-      setLoading(false); // Una volta finita la fetch, disattiviamo il caricamento
+      setLoading(false);
     }
   };
 
@@ -30,9 +29,21 @@ const Eventi = () => {
 
   return (
     <Container id="eventi-container" className="mt-5">
-      <h1 className="text-center text-primary">Eventi Disponibili</h1>
+      <div className="d-flex justify-content-between align-items-center">
+        <h1 className="text-primary">Eventi Disponibili</h1>
+
+        {/* Mostriamo il pulsante "Gestisci" solo se l'utente è Admin */}
+        {user?.isAdmin && location.pathname === "/eventi" && (
+          <Link to="/backoffice-eventi">
+            <Button variant="warning" className="fw-semibold">
+              🛠️ Gestisci
+            </Button>
+          </Link>
+        )}
+      </div>
+
+      {/* Lista degli eventi */}
       <Row className="mt-4 justify-content-center g-4">
-        {" "}
         {loading ? (
           <Col className="text-center mt-5">
             <Spinner animation="border" role="status" variant="primary" size="lg">
@@ -43,10 +54,7 @@ const Eventi = () => {
         ) : eventi.length > 0 ? (
           eventi.map((evento) => (
             <Col key={evento.id} xs={12} md={6} lg={4} className="d-flex">
-              {" "}
               <Card className="shadow-lg p-3 mb-4 d-flex flex-column h-100">
-                {" "}
-                {/*  Altezza uniforme */}
                 <Card.Img
                   variant="top"
                   src={evento.imgEvento}
@@ -63,7 +71,7 @@ const Eventi = () => {
                   </Card.Text>
                   <Button variant="primary" className="mt-auto w-100">
                     Prenota Evento
-                  </Button>{" "}
+                  </Button>
                 </Card.Body>
               </Card>
             </Col>

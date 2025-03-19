@@ -10,6 +10,7 @@ import HomePage from "./features/home/HomePage";
 import Ospedali from "./features/ospedali/Ospedali";
 import Eventi from "./features/eventi/Eventi";
 import BackOfficeOspedali from "./features/GestionaliAdmin/BackOfficeOspedali";
+import BackOfficeEventi from "./features/GestionaliAdmin/BackOfficeEventi";
 
 function App() {
   const dispatch = useDispatch();
@@ -25,6 +26,7 @@ function App() {
         <Route path="/ospedali" element={<Ospedali />} />
         <Route path="/eventi" element={<Eventi />} />
         <Route path="/backoffice-ospedali" element={<BackOfficeOspedali />} />
+        <Route path="/backoffice-eventi" element={<BackOfficeEventi />} />
       </Routes>
       <Footer />
     </BrowserRouter>

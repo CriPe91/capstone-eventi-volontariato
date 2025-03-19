@@ -31,21 +31,6 @@ const BackOfficeOspedali = () => {
 
   // Funzione per creare un nuovo ospedale
   const handleCreateOspedale = async () => {
-    /* try {
-      const formData = new FormData();
-      formData.append("dati", JSON.stringify({ nome: newOspedale.nome, indirizzo: newOspedale.indirizzo, email: newOspedale.email }));
-      if (newOspedale.imgOspedale) {
-        formData.append("imgOspedale", newOspedale.imgOspedale);
-      }
-
-      await http.postFormDataAuth("ospedali/newOspedale", formData);
-
-      setShowCreate(false);
-      getAllOspedali();
-    } catch (error) {
-      console.error("Errore nella creazione:", error);
-    } */
-
     try {
       const formData = new FormData();
       const jsonBlob = new Blob(
@@ -66,7 +51,7 @@ const BackOfficeOspedali = () => {
         formData.append("imgOspedale", newOspedale.imgOspedale);
       }
 
-      console.log("🔹 FormData inviato:", [...formData.entries()]); // Debugging
+      /* console.log(" FormData inviato:", [...formData.entries()]); */ // Debugging
 
       const response = await http.postFormDataAuth("ospedali/newOspedale", formData);
 
