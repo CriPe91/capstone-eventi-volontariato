@@ -50,12 +50,13 @@ export const http = {
       headers: {
         Authorization: "Bearer " + localStorage.getItem("token"),
       },
-      body: formData, // Non impostiamo il Content-Type manualmente
+      body: formData, // Non impostiamo manualmente il Content-Type lo fa in automatico
     });
 
-    /* console.log("Status della risposta:", response.status); */
-
-    if (!response.ok) throw new Error(`Errore nella richiesta POST FormData - Status: ${response.status}`);
+    if (!response.ok) {
+      const errorMessage = await response.text();
+      throw new Error(`Errore nella richiesta POST FormData - Status: ${response.status} - ${errorMessage}`);
+    }
 
     return response.json();
   },
