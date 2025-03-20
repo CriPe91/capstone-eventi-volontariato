@@ -29,17 +29,27 @@ export const http = {
   },
 
   // METODI PER IL BACKOFFICE(ADMIN)
-  postAuth: async (url, data, config) => {
+  postAuth: async (url, data = null, config = {}) => {
+    const headers = {
+      Authorization: "Bearer " + localStorage.getItem("token"),
+    };
+
+    // Aggiunge il Content-Type solo se c'è un body JSON
+    if (data) {
+      headers["Content-Type"] = "application/json";
+    }
+
     const response = await fetch(urlBase + url, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
+      headers,
+      body: data ? JSON.stringify(data) : null, // Se data è null, non manda il body
       ...config,
     });
 
-    if (!response.ok) throw new Error("Errore nella richiesta POST");
+    if (!response.ok) {
+      const errorMessage = await response.text();
+      throw new Error(`Errore nella richiesta POST: ${errorMessage}`);
+    }
 
     return response.json();
   },
