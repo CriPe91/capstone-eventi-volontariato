@@ -120,7 +120,7 @@ const Eventi = () => {
                       📝 <strong>Descrizione:</strong> {evento.descrizione}
                     </Card.Text>
 
-                    {!user?.isAdmin && (
+                    {!!user && !user?.isAdmin && (
                       <Button
                         variant={isPrenotato ? "danger" : "primary"}
                         className="mt-auto w-100"
