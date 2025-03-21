@@ -29,8 +29,8 @@ const Eventi = () => {
     if (!user || user.isAdmin) return; // Gli admin non vedono le prenotazioni
 
     try {
-      const data = await http.getAuth(`eventi/${user.id}/prenotati`);
-      setPrenotati(Array.isArray(data) ? data : []); // Evita il crash della pagina
+      const data = await http.getAuth(`eventi/prenotati/${user.id}`);
+      setPrenotati(Array.isArray(data.content) ? data.content : []); // Evita il crash della pagina
     } catch (error) {
       console.error("Errore nel recupero delle prenotazioni:", error);
       setPrenotati([]); // Evita il crash in caso di errore
@@ -38,9 +38,12 @@ const Eventi = () => {
   };
 
   useEffect(() => {
-    getAllEventi();
-    if (!user?.isAdmin) getPrenotazioniUtente(); // Solo utenti normali vedono le prenotazioni
-  }, [user]);
+    getAllEventi(); // Carica tutti gli eventi quando la pagina viene caricata
+
+    if (!user?.isAdmin) {
+      getPrenotazioniUtente(); // Gli utenti normali caricano anche le loro prenotazioni
+    }
+  }, [user, location.pathname]); // Aggiungiamo location.pathname per aggiornare la lista quando cambiamo pagina
 
   const handleApriModalePrenotazione = (evento) => {
     setEventoSelezionato(evento);

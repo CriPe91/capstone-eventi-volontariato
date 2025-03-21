@@ -45,6 +45,13 @@ const MyNavbar = () => {
               <Link className={`nav-link text-light ${location.pathname === "/eventi" ? "active" : ""} fs-5`} to="/eventi">
                 Eventi
               </Link>
+
+              {/*  Link Profilo visibile solo agli utenti normali */}
+              {user && !user.isAdmin && (
+                <Link className={`nav-link text-light ${location.pathname === "/profilo" ? "active" : ""} fs-5`} to="/profilo">
+                  Profilo
+                </Link>
+              )}
             </Nav>
 
             {/* Se l'utente è autenticato, mostriamo il nome e il bottone Logout */}
