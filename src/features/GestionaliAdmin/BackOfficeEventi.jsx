@@ -4,6 +4,7 @@ import { http } from "../../shared/utils/http";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../redux/authSlice";
 import { Link } from "react-router-dom";
+import { People } from "react-bootstrap-icons";
 
 const BackOfficeEventi = () => {
   const [eventi, setEventi] = useState([]);
@@ -19,6 +20,9 @@ const BackOfficeEventi = () => {
     ospedaleId: "",
     imgEvento: null,
   });
+  const [showPrenotati, setShowPrenotati] = useState(false); // Modale per visualizzare prenotati
+  const [prenotati, setPrenotati] = useState([]); // Lista utenti prenotati all'evento
+  const [eventoCorrente, setEventoCorrente] = useState(null); // Evento selezionato
 
   const user = useSelector(selectUser);
 
@@ -104,6 +108,19 @@ const BackOfficeEventi = () => {
     }
   };
 
+  const handleShowPrenotati = async (evento) => {
+    try {
+      setEventoCorrente(evento); // Salva l'evento selezionato
+      const data = await http.getAuth(`eventi/${evento.id}/prenotati`);
+      setPrenotati(data || []); // Imposta i prenotati, evita errori se la risposta è vuota
+      setShowPrenotati(true); // Mostra il modale
+    } catch (error) {
+      console.error("Errore nel recupero degli utenti prenotati:", error);
+      setPrenotati([]); // Evita problemi nel rendering
+      setShowPrenotati(true);
+    }
+  };
+
   return (
     <Container fluid className="mt-5">
       <Row className="d-flex justify-content-between align-items-center mb-4">
@@ -152,6 +169,15 @@ const BackOfficeEventi = () => {
                       <td>{evento.ospedale.nome}</td>
                       <td>
                         <div className="d-flex gap-2">
+                          <Button
+                            variant="outline-primary"
+                            size="sm"
+                            className="px-2 py-1 d-flex align-items-center"
+                            onClick={() => handleShowPrenotati(evento)}
+                          >
+                            <People className="me-1" /> Prenotati
+                          </Button>
+
                           <Button
                             variant="outline-warning"
                             size="sm"
@@ -258,6 +284,30 @@ const BackOfficeEventi = () => {
         <Modal.Footer>
           <Button variant="primary" className="text-light" onClick={handleEditEvento}>
             Modifica
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      {/* Modale per Utenti Prenotati */}
+      <Modal show={showPrenotati} onHide={() => setShowPrenotati(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>👥 Utenti Prenotati {eventoCorrente ? `- ${eventoCorrente.titolo}` : ""}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {prenotati.length > 0 ? (
+            <ul>
+              {prenotati.map((utente) => (
+                <li key={utente.id}>
+                  {utente.nome} {utente.cognome} - {utente.email}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-center">Nessun utente prenotato a questo evento</p>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowPrenotati(false)}>
+            Chiudi
           </Button>
         </Modal.Footer>
       </Modal>

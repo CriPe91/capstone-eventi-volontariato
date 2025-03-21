@@ -17,6 +17,10 @@ const MyNavbar = () => {
   const handleLogout = () => {
     dispatch(resetToken()); // Rimuove il token dal localStorage
     dispatch(resetUser()); // Resetta l'utente nello store
+    // Se l'utente è su una pagina admin, lo riporta alla home
+    if (location.pathname.startsWith("/backoffice")) {
+      window.location.href = "/"; // Forza il reindirizzamento alla home
+    }
   };
 
   return (
