@@ -230,6 +230,29 @@ const BackOfficeEventi = () => {
               <Form.Label>Titolo</Form.Label>
               <Form.Control type="text" value={editingEvento?.titolo} onChange={(e) => setEditingEvento({ ...editingEvento, titolo: e.target.value })} />
             </Form.Group>
+            <Form.Group>
+              <Form.Label>Descrizione</Form.Label>
+              <Form.Control
+                type="text"
+                value={editingEvento?.descrizione}
+                onChange={(e) => setEditingEvento({ ...editingEvento, descrizione: e.target.value })}
+              />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Data</Form.Label>
+              <Form.Control type="date" value={editingEvento?.data} onChange={(e) => setEditingEvento({ ...editingEvento, data: e.target.value })} />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Ospedale</Form.Label>
+              <Form.Select value={editingEvento?.ospedale?.id} onChange={(e) => setEditingEvento({ ...editingEvento, ospedale: { id: e.target.value } })}>
+                <option value="">Seleziona un ospedale</option>
+                {ospedali.map((osp) => (
+                  <option key={osp.id} value={osp.id}>
+                    {osp.nome}
+                  </option>
+                ))}
+              </Form.Select>
+            </Form.Group>
           </Form>
         </Modal.Body>
         <Modal.Footer>
