@@ -30,7 +30,7 @@ const Eventi = () => {
 
     try {
       const data = await http.getAuth(`eventi/prenotati/${user.id}`);
-      setPrenotati(Array.isArray(data.content) ? data.content : []); // Evita il crash della pagina
+      setPrenotati(Array.isArray(data) ? data : []); // Evita il crash della pagina
     } catch (error) {
       console.error("Errore nel recupero delle prenotazioni:", error);
       setPrenotati([]); // Evita il crash in caso di errore

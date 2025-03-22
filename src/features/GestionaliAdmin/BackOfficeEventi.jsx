@@ -182,7 +182,10 @@ const BackOfficeEventi = () => {
                             variant="outline-warning"
                             size="sm"
                             onClick={() => {
-                              setEditingEvento(evento);
+                              setEditingEvento({
+                                ...evento,
+                                ospedaleId: evento.ospedale.id,
+                              });
                               setShowEdit(true);
                             }}
                           >
@@ -270,7 +273,15 @@ const BackOfficeEventi = () => {
             </Form.Group>
             <Form.Group>
               <Form.Label>Ospedale</Form.Label>
-              <Form.Select value={editingEvento?.ospedale?.id} onChange={(e) => setEditingEvento({ ...editingEvento, ospedale: { id: e.target.value } })}>
+              <Form.Select
+                value={editingEvento?.ospedaleId || ""}
+                onChange={(e) =>
+                  setEditingEvento({
+                    ...editingEvento,
+                    ospedaleId: parseInt(e.target.value),
+                  })
+                }
+              >
                 <option value="">Seleziona un ospedale</option>
                 {ospedali.map((osp) => (
                   <option key={osp.id} value={osp.id}>

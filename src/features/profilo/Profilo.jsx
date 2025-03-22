@@ -22,7 +22,7 @@ const Profilo = () => {
     const getEventiPrenotati = async () => {
       try {
         const data = await http.getAuth(`eventi/prenotati/${user.id}`);
-        setEventiPrenotati(data.content || []);
+        setEventiPrenotati(data || []);
       } catch (error) {
         console.error("Errore nel recupero degli eventi prenotati:", error);
       } finally {
