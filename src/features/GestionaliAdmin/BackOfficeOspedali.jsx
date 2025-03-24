@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Table, Button, Container, Spinner, Modal, Form, Row, Col } from "react-bootstrap";
 import { http } from "../../shared/utils/http";
 import { Link } from "react-router-dom";
+import { PencilSquare, Trash } from "react-bootstrap-icons";
 
 const BackOfficeOspedali = () => {
   const [ospedali, setOspedali] = useState([]);
@@ -11,12 +12,16 @@ const BackOfficeOspedali = () => {
   const [editingOspedale, setEditingOspedale] = useState(null);
   const [newOspedale, setNewOspedale] = useState({ nome: "", indirizzo: "", email: "", imgOspedale: null });
 
-  // Funzione per ottenere tutti gli ospedali
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [ospedaleDaEliminare, setOspedaleDaEliminare] = useState(null);
+
+  const [showConfermaModal, setShowConfermaModal] = useState(false);
+  const [messaggioConferma, setMessaggioConferma] = useState("");
+
   const getAllOspedali = async () => {
     try {
       const response = await http.get("ospedali");
       const data = await response.json();
-
       setOspedali(data || []);
     } catch (error) {
       console.error("Errore nella fetch:", error);
@@ -29,7 +34,6 @@ const BackOfficeOspedali = () => {
     getAllOspedali();
   }, []);
 
-  // Funzione per creare un nuovo ospedale
   const handleCreateOspedale = async () => {
     try {
       const formData = new FormData();
@@ -43,28 +47,21 @@ const BackOfficeOspedali = () => {
         ],
         { type: "application/json" }
       );
-      // Aggiungiamo i dati come stringa JSON
       formData.append("dati", jsonBlob);
-
-      // Aggiungiamo l'immagine solo se è presente
       if (newOspedale.imgOspedale) {
         formData.append("imgOspedale", newOspedale.imgOspedale);
       }
 
-      /* console.log(" FormData inviato:", [...formData.entries()]); */ // Debugging
-
-      const response = await http.postFormDataAuth("ospedali/newOspedale", formData);
-
-      console.log("Risposta del server:", response);
-
+      await http.postFormDataAuth("ospedali/newOspedale", formData);
       setShowCreate(false);
       getAllOspedali();
+      setMessaggioConferma("Ospedale creato con successo!");
+      setShowConfermaModal(true);
     } catch (error) {
       console.error("Errore nella creazione:", error);
     }
   };
 
-  // Funzione per modificare un ospedale
   const handleEditOspedale = async () => {
     try {
       await http.putAuth(`ospedali/${editingOspedale.id}`, {
@@ -75,26 +72,34 @@ const BackOfficeOspedali = () => {
 
       setShowEdit(false);
       getAllOspedali();
+      setMessaggioConferma("Modifica effettuata con successo!");
+      setShowConfermaModal(true);
     } catch (error) {
       console.error("Errore nella modifica:", error);
     }
   };
 
-  // Funzione per eliminare un ospedale
-  const handleDeleteOspedale = async (id) => {
-    if (window.confirm("Sei sicuro di voler eliminare questo ospedale?")) {
-      try {
-        await http.deleteAuth(`ospedali/${id}`);
-        getAllOspedali();
-      } catch (error) {
-        console.error("Errore nella cancellazione:", error);
-      }
+  const handleApriModaleEliminazione = (ospedale) => {
+    setOspedaleDaEliminare(ospedale);
+    setShowDeleteModal(true);
+  };
+
+  const handleConfermaEliminazione = async () => {
+    try {
+      await http.deleteAuth(`ospedali/${ospedaleDaEliminare.id}`);
+      setShowDeleteModal(false);
+      setOspedaleDaEliminare(null);
+      getAllOspedali();
+      setMessaggioConferma("Ospedale eliminato con successo!");
+      setShowConfermaModal(true);
+    } catch (error) {
+      console.error("Errore nella cancellazione:", error);
+      setShowDeleteModal(false);
     }
   };
 
   return (
     <Container fluid className="mt-5">
-      {/* Titolo e pulsante per tornare alla pagina ospedali */}
       <Row className="d-flex justify-content-between align-items-center mb-4">
         <Col xs={12} md={6}>
           <h1 className="text-primary">Gestione Ospedali</h1>
@@ -111,7 +116,6 @@ const BackOfficeOspedali = () => {
         </Col>
       </Row>
 
-      {/* Se i dati sono in caricamento, mostra Spinner */}
       {loading ? (
         <div className="text-center mt-4">
           <Spinner animation="border" variant="primary" />
@@ -148,10 +152,10 @@ const BackOfficeOspedali = () => {
                               setShowEdit(true);
                             }}
                           >
-                            ✏️
+                            <PencilSquare size={18} />
                           </Button>
-                          <Button variant="outline-danger" size="sm" onClick={() => handleDeleteOspedale(ospedale.id)}>
-                            🗑️
+                          <Button variant="outline-danger" size="sm" onClick={() => handleApriModaleEliminazione(ospedale)}>
+                            <Trash size={18} />
                           </Button>
                         </div>
                       </td>
@@ -164,9 +168,9 @@ const BackOfficeOspedali = () => {
         </Row>
       )}
 
-      {/* Modale per Creazione Ospedale */}
+      {/* Modale Creazione */}
       <Modal show={showCreate} onHide={() => setShowCreate(false)} centered>
-        <Modal.Header closeButton>
+        <Modal.Header closeButton className="bg-primary text-light">
           <Modal.Title>➕ Aggiungi Ospedale</Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -196,9 +200,9 @@ const BackOfficeOspedali = () => {
         </Modal.Footer>
       </Modal>
 
-      {/* Modale per Modifica Ospedale */}
+      {/* Modale Modifica */}
       <Modal show={showEdit} onHide={() => setShowEdit(false)} centered>
-        <Modal.Header closeButton>
+        <Modal.Header closeButton className="bg-primary text-light">
           <Modal.Title>✏️ Modifica Ospedale</Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -224,6 +228,46 @@ const BackOfficeOspedali = () => {
         <Modal.Footer>
           <Button variant="primary" className="text-light" onClick={handleEditOspedale}>
             Modifica
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Modale Eliminazione */}
+      <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)} centered>
+        <Modal.Header closeButton className="bg-primary text-light">
+          <Modal.Title>⚠️ Conferma Eliminazione</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {ospedaleDaEliminare && (
+            <>
+              <p>Sei sicuro di voler eliminare l'ospedale:</p>
+              <p>
+                <strong>{ospedaleDaEliminare.nome}</strong> – {ospedaleDaEliminare.indirizzo} - {ospedaleDaEliminare.email}
+              </p>
+            </>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
+            Annulla
+          </Button>
+          <Button variant="danger" onClick={handleConfermaEliminazione}>
+            Elimina
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Modale Conferma Operazione */}
+      <Modal show={showConfermaModal} onHide={() => setShowConfermaModal(false)} centered>
+        <Modal.Header closeButton className="bg-primary text-light">
+          <Modal.Title>✅ Operazione completata</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>{messaggioConferma}</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="primary" onClick={() => setShowConfermaModal(false)}>
+            Chiudi
           </Button>
         </Modal.Footer>
       </Modal>

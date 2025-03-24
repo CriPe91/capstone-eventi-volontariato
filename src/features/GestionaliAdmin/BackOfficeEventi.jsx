@@ -4,7 +4,7 @@ import { http } from "../../shared/utils/http";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../redux/authSlice";
 import { Link } from "react-router-dom";
-import { People } from "react-bootstrap-icons";
+import { People, PencilSquare, Trash } from "react-bootstrap-icons";
 
 const BackOfficeEventi = () => {
   const [eventi, setEventi] = useState([]);
@@ -20,9 +20,15 @@ const BackOfficeEventi = () => {
     ospedaleId: "",
     imgEvento: null,
   });
-  const [showPrenotati, setShowPrenotati] = useState(false); // Modale per visualizzare prenotati
-  const [prenotati, setPrenotati] = useState([]); // Lista utenti prenotati all'evento
-  const [eventoCorrente, setEventoCorrente] = useState(null); // Evento selezionato
+  const [showPrenotati, setShowPrenotati] = useState(false);
+  const [prenotati, setPrenotati] = useState([]);
+  const [eventoCorrente, setEventoCorrente] = useState(null);
+
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [eventoDaEliminare, setEventoDaEliminare] = useState(null);
+
+  const [showConfermaModal, setShowConfermaModal] = useState(false);
+  const [messaggioConferma, setMessaggioConferma] = useState("");
 
   const user = useSelector(selectUser);
 
@@ -68,7 +74,6 @@ const BackOfficeEventi = () => {
         { type: "application/json" }
       );
       formData.append("dati", jsonBlob);
-
       if (newEvento.imgEvento) {
         formData.append("imgEvento", newEvento.imgEvento);
       }
@@ -76,6 +81,8 @@ const BackOfficeEventi = () => {
       await http.postFormDataAuth("eventi/newEvento", formData);
       setShowCreate(false);
       getAllEventi();
+      setMessaggioConferma("Evento creato con successo!");
+      setShowConfermaModal(true);
     } catch (error) {
       console.error("Errore nella creazione:", error);
     }
@@ -92,31 +99,41 @@ const BackOfficeEventi = () => {
 
       setShowEdit(false);
       getAllEventi();
+      setMessaggioConferma("Modifica effettuata con successo!");
+      setShowConfermaModal(true);
     } catch (error) {
       console.error("Errore nella modifica:", error);
     }
   };
 
-  const handleDeleteEvento = async (id) => {
-    if (window.confirm("Sei sicuro di voler eliminare questo evento?")) {
-      try {
-        await http.deleteAuth(`eventi/${id}`);
-        getAllEventi();
-      } catch (error) {
-        console.error("Errore nella cancellazione:", error);
-      }
+  const handleApriModaleEliminazione = (evento) => {
+    setEventoDaEliminare(evento);
+    setShowDeleteModal(true);
+  };
+
+  const handleConfermaEliminazione = async () => {
+    try {
+      await http.deleteAuth(`eventi/${eventoDaEliminare.id}`);
+      setShowDeleteModal(false);
+      setEventoDaEliminare(null);
+      getAllEventi();
+      setMessaggioConferma("Evento eliminato con successo!");
+      setShowConfermaModal(true);
+    } catch (error) {
+      console.error("Errore nella cancellazione:", error);
+      setShowDeleteModal(false);
     }
   };
 
   const handleShowPrenotati = async (evento) => {
     try {
-      setEventoCorrente(evento); // Salva l'evento selezionato
+      setEventoCorrente(evento);
       const data = await http.getAuth(`eventi/${evento.id}/prenotati`);
-      setPrenotati(data || []); // Imposta i prenotati, evita errori se la risposta è vuota
-      setShowPrenotati(true); // Mostra il modale
+      setPrenotati(data || []);
+      setShowPrenotati(true);
     } catch (error) {
       console.error("Errore nel recupero degli utenti prenotati:", error);
-      setPrenotati([]); // Evita problemi nel rendering
+      setPrenotati([]);
       setShowPrenotati(true);
     }
   };
@@ -189,10 +206,11 @@ const BackOfficeEventi = () => {
                               setShowEdit(true);
                             }}
                           >
-                            ✏️
+                            <PencilSquare size={18} />
                           </Button>
-                          <Button variant="outline-danger" size="sm" onClick={() => handleDeleteEvento(evento.id)}>
-                            🗑️
+
+                          <Button variant="outline-danger" size="sm" onClick={() => handleApriModaleEliminazione(evento)}>
+                            <Trash size={18} />
                           </Button>
                         </div>
                       </td>
@@ -205,9 +223,9 @@ const BackOfficeEventi = () => {
         </Row>
       )}
 
-      {/* Modale per Creazione Evento */}
+      {/* Modale Creazione */}
       <Modal show={showCreate} onHide={() => setShowCreate(false)} centered>
-        <Modal.Header closeButton>
+        <Modal.Header closeButton className="bg-primary text-light">
           <Modal.Title>➕ Aggiungi Evento</Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -248,9 +266,9 @@ const BackOfficeEventi = () => {
         </Modal.Footer>
       </Modal>
 
-      {/* Modale per Modifica Evento */}
+      {/* Modale Modifica */}
       <Modal show={showEdit} onHide={() => setShowEdit(false)} centered>
-        <Modal.Header closeButton>
+        <Modal.Header closeButton className="bg-primary text-light">
           <Modal.Title>✏️ Modifica Evento</Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -298,9 +316,10 @@ const BackOfficeEventi = () => {
           </Button>
         </Modal.Footer>
       </Modal>
-      {/* Modale per Utenti Prenotati */}
+
+      {/* Modale Prenotati */}
       <Modal show={showPrenotati} onHide={() => setShowPrenotati(false)} centered>
-        <Modal.Header closeButton>
+        <Modal.Header closeButton className="bg-primary text-light">
           <Modal.Title>👥 Utenti Prenotati {eventoCorrente ? `- ${eventoCorrente.titolo}` : ""}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -318,6 +337,48 @@ const BackOfficeEventi = () => {
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowPrenotati(false)}>
+            Chiudi
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Modale Eliminazione */}
+      <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)} centered>
+        <Modal.Header closeButton className="bg-primary text-light">
+          <Modal.Title>⚠️ Conferma Eliminazione</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {eventoDaEliminare && (
+            <>
+              <p>Sei sicuro di voler eliminare l'evento:</p>
+              <p>
+                <strong>{eventoDaEliminare.titolo}</strong> – {eventoDaEliminare.data}
+                <br />
+                presso <strong>{eventoDaEliminare.ospedale.nome}</strong>
+              </p>
+            </>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
+            Annulla
+          </Button>
+          <Button variant="danger" onClick={handleConfermaEliminazione}>
+            Elimina
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Modale Conferma Operazione */}
+      <Modal show={showConfermaModal} onHide={() => setShowConfermaModal(false)} centered>
+        <Modal.Header closeButton className="bg-primary text-light">
+          <Modal.Title>✅ Operazione completata</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>{messaggioConferma}</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="primary" onClick={() => setShowConfermaModal(false)}>
             Chiudi
           </Button>
         </Modal.Footer>

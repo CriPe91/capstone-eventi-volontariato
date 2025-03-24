@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Container, Row, Col, Table, Button, Form, Spinner, Alert } from "react-bootstrap";
+import { Container, Row, Col, Table, Button, Form, Spinner, Alert, Modal } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../redux/authSlice";
 import { http } from "../../shared/utils/http";
@@ -12,12 +12,18 @@ const Profilo = () => {
   const [loading, setLoading] = useState(true);
   const [titolo, setTitolo] = useState("");
   const [data, setData] = useState("");
+
+  const [eventoDaAnnullare, setEventoDaAnnullare] = useState(null);
+  const [showAnnullaModal, setShowAnnullaModal] = useState(false);
+  const [messaggioConferma, setMessaggioConferma] = useState("");
+  const [showConfermaModal, setShowConfermaModal] = useState(false);
+
   const filtered = eventiPrenotati.filter((evento) => {
     return evento.titolo.toLowerCase().trim().includes(titolo.toLowerCase().trim()) && (!data || evento.data === data);
   });
 
   useEffect(() => {
-    if (!user || user.isAdmin) return; // Solo utenti normali possono accedere
+    if (!user || user.isAdmin) return;
 
     const getEventiPrenotati = async () => {
       try {
@@ -33,16 +39,25 @@ const Profilo = () => {
     getEventiPrenotati();
   }, [user]);
 
-  const handleAnnullaPrenotazione = async (eventoId) => {
-    if (!user) return;
+  const handleApriModaleAnnullamento = (evento) => {
+    setEventoDaAnnullare(evento);
+    setShowAnnullaModal(true);
+  };
+
+  const handleConfermaAnnullamento = async () => {
+    if (!user || !eventoDaAnnullare) return;
 
     try {
-      await http.deleteAuth(`eventi/${eventoId}/annulla/${user.id}`);
-      alert(`Prenotazione annullata con successo!`);
-      setEventiPrenotati(eventiPrenotati.filter((e) => e.id !== eventoId));
+      await http.deleteAuth(`eventi/${eventoDaAnnullare.id}/annulla/${user.id}`);
+      setEventiPrenotati(eventiPrenotati.filter((e) => e.id !== eventoDaAnnullare.id));
+      setMessaggioConferma("Prenotazione annullata con successo!");
     } catch (error) {
       console.error("Errore nell'annullamento della prenotazione:", error);
-      alert("Errore durante l'annullamento. Riprova!");
+      setMessaggioConferma("Errore durante l'annullamento. Riprova!");
+    } finally {
+      setShowAnnullaModal(false);
+      setShowConfermaModal(true);
+      setEventoDaAnnullare(null);
     }
   };
 
@@ -96,7 +111,7 @@ const Profilo = () => {
                     <td>{evento.data}</td>
                     <td>{evento.ospedale.nome}</td>
                     <td>
-                      <Button variant="outline-danger" size="sm" onClick={() => handleAnnullaPrenotazione(evento.id)}>
+                      <Button variant="outline-danger" size="sm" onClick={() => handleApriModaleAnnullamento(evento)}>
                         <Trash size={18} /> Annulla
                       </Button>
                     </td>
@@ -111,6 +126,48 @@ const Profilo = () => {
           )}
         </Col>
       </Row>
+
+      {/* Modale di conferma annullamento */}
+      <Modal show={showAnnullaModal} onHide={() => setShowAnnullaModal(false)} centered>
+        <Modal.Header closeButton className="bg-primary text-light">
+          <Modal.Title>⚠️ Conferma Annullamento</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {eventoDaAnnullare && (
+            <>
+              <p>Sei sicuro di voler annullare la prenotazione per:</p>
+              <p>
+                <strong>{eventoDaAnnullare.titolo}</strong> il <strong>{eventoDaAnnullare.data}</strong>
+                <br />
+                presso <strong>{eventoDaAnnullare.ospedale.nome}</strong>?
+              </p>
+            </>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowAnnullaModal(false)}>
+            Torna indietro
+          </Button>
+          <Button variant="danger" onClick={handleConfermaAnnullamento}>
+            Conferma Annullamento
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Modale di feedback */}
+      <Modal show={showConfermaModal} onHide={() => setShowConfermaModal(false)} centered>
+        <Modal.Header closeButton className="bg-primary text-light">
+          <Modal.Title>✅ Esito Operazione</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>{messaggioConferma}</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="primary" onClick={() => setShowConfermaModal(false)}>
+            Chiudi
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </Container>
   );
 };

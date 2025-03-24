@@ -11,6 +11,11 @@ const Eventi = () => {
   const [loading, setLoading] = useState(true);
   const [showPrenotaModal, setShowPrenotaModal] = useState(false);
   const [eventoSelezionato, setEventoSelezionato] = useState(null);
+  const [showAnnullaModal, setShowAnnullaModal] = useState(false);
+  const [eventoDaAnnullare, setEventoDaAnnullare] = useState(null);
+  const [showConfermaModal, setShowConfermaModal] = useState(false);
+  const [messaggioConferma, setMessaggioConferma] = useState("");
+
   const user = useSelector(selectUser);
   const location = useLocation();
 
@@ -26,24 +31,23 @@ const Eventi = () => {
   };
 
   const getPrenotazioniUtente = async () => {
-    if (!user || user.isAdmin) return; // Gli admin non vedono le prenotazioni
+    if (!user || user.isAdmin) return;
 
     try {
       const data = await http.getAuth(`eventi/prenotati/${user.id}`);
-      setPrenotati(Array.isArray(data) ? data : []); // Evita il crash della pagina
+      setPrenotati(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error("Errore nel recupero delle prenotazioni:", error);
-      setPrenotati([]); // Evita il crash in caso di errore
+      setPrenotati([]);
     }
   };
 
   useEffect(() => {
-    getAllEventi(); // Carica tutti gli eventi quando la pagina viene caricata
-
+    getAllEventi();
     if (!user?.isAdmin) {
-      getPrenotazioniUtente(); // Gli utenti normali caricano anche le loro prenotazioni
+      getPrenotazioniUtente();
     }
-  }, [user, location.pathname]); // Aggiungiamo location.pathname per aggiornare la lista quando cambiamo pagina
+  }, [user, location.pathname]);
 
   const handleApriModalePrenotazione = (evento) => {
     setEventoSelezionato(evento);
@@ -52,31 +56,43 @@ const Eventi = () => {
 
   const handlePrenotazione = async () => {
     if (!user || user.isAdmin) {
-      alert("Solo gli utenti normali possono prenotarsi!");
+      setMessaggioConferma("Solo gli utenti normali possono prenotarsi!");
+      setShowConfermaModal(true);
       return;
     }
 
     try {
       await http.postAuth(`eventi/${eventoSelezionato.id}/prenota/${user.id}`);
-      alert(`Prenotazione confermata per ${user.nome} ${user.cognome}!`);
-      setPrenotati([...prenotati, eventoSelezionato]); // Aggiorna lo stato
-      setShowPrenotaModal(false);
+      setPrenotati([...prenotati, eventoSelezionato]);
+      setMessaggioConferma(`Prenotazione confermata per ${user.nome} ${user.cognome}, controlla la tua casella postale!`);
     } catch (error) {
       console.error("Errore nella prenotazione:", error);
-      alert("Errore durante la prenotazione. Riprova!");
+      setMessaggioConferma("Errore durante la prenotazione. Riprova!");
+    } finally {
+      setShowPrenotaModal(false);
+      setShowConfermaModal(true);
     }
   };
 
-  const handleAnnullaPrenotazione = async (eventoId) => {
-    if (!user || user.isAdmin) return; // Admin non può annullare
+  const handleApriModaleAnnullamento = (evento) => {
+    setEventoDaAnnullare(evento);
+    setShowAnnullaModal(true);
+  };
+
+  const handleConfermaAnnullamento = async () => {
+    if (!user || user.isAdmin || !eventoDaAnnullare) return;
 
     try {
-      await http.deleteAuth(`eventi/${eventoId}/annulla/${user.id}`);
-      alert(`Prenotazione annullata per ${user.nome} ${user.cognome}!`);
-      setPrenotati(prenotati.filter((e) => e.id !== eventoId)); // Rimuove l'evento dalla lista prenotati
+      await http.deleteAuth(`eventi/${eventoDaAnnullare.id}/annulla/${user.id}`);
+      setPrenotati(prenotati.filter((e) => e.id !== eventoDaAnnullare.id));
+      setMessaggioConferma(`Prenotazione annullata per ${user.nome} ${user.cognome}!`);
     } catch (error) {
       console.error("Errore nell'annullamento della prenotazione:", error);
-      alert("Errore durante l'annullamento. Riprova!");
+      setMessaggioConferma("Errore durante l'annullamento. Riprova!");
+    } finally {
+      setShowAnnullaModal(false);
+      setEventoDaAnnullare(null);
+      setShowConfermaModal(true);
     }
   };
 
@@ -127,7 +143,7 @@ const Eventi = () => {
                       <Button
                         variant={isPrenotato ? "danger" : "primary"}
                         className="mt-auto w-100"
-                        onClick={() => (isPrenotato ? handleAnnullaPrenotazione(evento.id) : handleApriModalePrenotazione(evento))}
+                        onClick={() => (isPrenotato ? handleApriModaleAnnullamento(evento) : handleApriModalePrenotazione(evento))}
                       >
                         {isPrenotato ? "Annulla Prenotazione" : "Prenota Evento"}
                       </Button>
@@ -144,8 +160,9 @@ const Eventi = () => {
         )}
       </Row>
 
+      {/* Modale di conferma prenotazione */}
       <Modal show={showPrenotaModal} onHide={() => setShowPrenotaModal(false)} centered>
-        <Modal.Header closeButton>
+        <Modal.Header closeButton className="bg-primary text-light">
           <Modal.Title>📌 Conferma Prenotazione</Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -169,6 +186,48 @@ const Eventi = () => {
           </Button>
           <Button variant="primary" onClick={handlePrenotazione}>
             Conferma Prenotazione
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Modale di conferma annullamento */}
+      <Modal show={showAnnullaModal} onHide={() => setShowAnnullaModal(false)} centered>
+        <Modal.Header closeButton className="bg-primary text-light">
+          <Modal.Title>⚠️ Conferma Annullamento</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {eventoDaAnnullare && (
+            <>
+              <p>Sei sicuro di voler annullare la prenotazione per:</p>
+              <p>
+                <strong>{eventoDaAnnullare.titolo}</strong> il <strong>{eventoDaAnnullare.data}</strong>
+                <br />
+                presso <strong>{eventoDaAnnullare.ospedale.nome}</strong>?
+              </p>
+            </>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowAnnullaModal(false)}>
+            Torna indietro
+          </Button>
+          <Button variant="danger" onClick={handleConfermaAnnullamento}>
+            Conferma Annullamento
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Modale di feedback (messaggi di conferma/errore) */}
+      <Modal show={showConfermaModal} onHide={() => setShowConfermaModal(false)} centered>
+        <Modal.Header closeButton className="bg-primary text-light">
+          <Modal.Title>✅ Esito Operazione</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>{messaggioConferma}</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="primary" onClick={() => setShowConfermaModal(false)}>
+            Chiudi
           </Button>
         </Modal.Footer>
       </Modal>
