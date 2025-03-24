@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSelector, createSlice } from "@reduxjs/toolkit";
 import { http } from "../shared/utils/http";
 
 const initialState = {
@@ -64,5 +64,8 @@ export const registerUser = (userData) => async (dispatch) => {
 
 export const selectUser = (state) => state.auth.user;
 export const selectInit = (state) => state.auth.init;
+export const selectIsAdmin = createSelector(selectUser, (user) => {
+  return user && user.isAdmin;
+});
 
 export default authSlice.reducer;

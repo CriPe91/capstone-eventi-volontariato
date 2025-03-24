@@ -18,50 +18,44 @@ const HomePage = () => {
 
       {/* Carosello di Immagini */}
 
-      <Container fluid>
-        <Row xs={1} id="homepage-carousel" className="mt-4">
-          <Col>
-            <Carousel>
-              <Carousel.Item>
-                <Image
-                  className="w-100 object-fit-cover"
-                  height={550}
-                  src="https://www.avveniredicalabria.it/wp-content/uploads/2021/04/volontari-del-sorriso-0.jpg"
-                  alt="Volontari giocano con i bambini"
-                />
-                <Carousel.Caption>
-                  <h3>Giochi e Intrattenimento</h3>
-                  <p>Il gioco è una terapia potente che aiuta i bambini a sentirsi meno soli.</p>
-                </Carousel.Caption>
-              </Carousel.Item>
-              <Carousel.Item>
-                <Image
-                  className="w-100 object-fit-cover"
-                  height={550}
-                  src="https://cdn.prod.website-files.com/5e8af888eaf48714ca48963a/610b9bd850b073e4e7d4054c_assistente%20sociale-volontariato-ponte-umanizzazione-cure--.png"
-                  alt="Lettura di favole ai bambini"
-                />
-                <Carousel.Caption>
-                  <h3>Storie e Fantasia</h3>
-                  <p>Un libro può trasportare un bambino in un mondo magico anche dal letto d’ospedale.</p>
-                </Carousel.Caption>
-              </Carousel.Item>
-              <Carousel.Item>
-                <Image
-                  className="w-100 object-fit-cover"
-                  height={550}
-                  src="https://teniamocipermanoonlus.net/wp-content/themes/yootheme/cache/4e/Associazione-di-Clownterapia-Teniamoci-Per-Mano-4e658853.jpeg"
-                  alt="Artisti e musica per i bambini"
-                />
-                <Carousel.Caption>
-                  <h3>Musica e Creatività</h3>
-                  <p>La musica e il disegno aiutano a ridurre lo stress e a migliorare l'umore.</p>
-                </Carousel.Caption>
-              </Carousel.Item>
-            </Carousel>
-          </Col>
-        </Row>
-      </Container>
+      <Carousel>
+        <Carousel.Item>
+          <Image
+            className="w-100 object-fit-cover"
+            height={500}
+            src="https://www.avveniredicalabria.it/wp-content/uploads/2021/04/volontari-del-sorriso-0.jpg"
+            alt="Volontari giocano con i bambini"
+          />
+          <Carousel.Caption>
+            <h3>Giochi e Intrattenimento</h3>
+            <p>Il gioco è una terapia potente che aiuta i bambini a sentirsi meno soli.</p>
+          </Carousel.Caption>
+        </Carousel.Item>
+        <Carousel.Item>
+          <Image
+            className="w-100 object-fit-cover"
+            height={500}
+            src="https://cdn.prod.website-files.com/5e8af888eaf48714ca48963a/610b9bd850b073e4e7d4054c_assistente%20sociale-volontariato-ponte-umanizzazione-cure--.png"
+            alt="Lettura di favole ai bambini"
+          />
+          <Carousel.Caption>
+            <h3>Storie e Fantasia</h3>
+            <p>Un libro può trasportare un bambino in un mondo magico anche dal letto d’ospedale.</p>
+          </Carousel.Caption>
+        </Carousel.Item>
+        <Carousel.Item>
+          <Image
+            className="w-100 object-fit-cover"
+            height={500}
+            src="https://teniamocipermanoonlus.net/wp-content/themes/yootheme/cache/4e/Associazione-di-Clownterapia-Teniamoci-Per-Mano-4e658853.jpeg"
+            alt="Artisti e musica per i bambini"
+          />
+          <Carousel.Caption>
+            <h3>Musica e Creatività</h3>
+            <p>La musica e il disegno aiutano a ridurre lo stress e a migliorare l'umore.</p>
+          </Carousel.Caption>
+        </Carousel.Item>
+      </Carousel>
 
       <Container className="mt-5">
         {/* Sezione di Sensibilizzazione*/}

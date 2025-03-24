@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { Table, Button, Container, Spinner, Modal, Form, Row, Col } from "react-bootstrap";
 import { http } from "../../shared/utils/http";
 import { useSelector } from "react-redux";
-import { selectUser } from "../../redux/authSlice";
-import { Link } from "react-router-dom";
+import { selectIsAdmin, selectUser } from "../../redux/authSlice";
+import { Link, useNavigate } from "react-router-dom";
 import { People, PencilSquare, Trash } from "react-bootstrap-icons";
 
 const BackOfficeEventi = () => {
@@ -31,6 +31,15 @@ const BackOfficeEventi = () => {
   const [messaggioConferma, setMessaggioConferma] = useState("");
 
   const user = useSelector(selectUser);
+
+  const isAdmin = useSelector(selectIsAdmin);
+
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!isAdmin) {
+      navigate("/");
+    }
+  }, [isAdmin]);
 
   const getAllEventi = async () => {
     try {
@@ -139,251 +148,255 @@ const BackOfficeEventi = () => {
   };
 
   return (
-    <Container fluid className="mt-5">
-      <Row className="d-flex justify-content-between align-items-center mb-4">
-        <Col xs={12} md={6}>
-          <h1 className="text-primary">Gestione Eventi</h1>
-        </Col>
-        <Col xs={12} md={6} className="d-flex justify-content-md-end justify-content-start">
-          <Button variant="primary" className="me-2 text-light" onClick={() => setShowCreate(true)}>
-            ➕ Aggiungi Evento
-          </Button>
-          <Link to="/eventi">
-            <Button variant="secondary" className="text-light">
-              ⬅️ Torna agli Eventi
-            </Button>
-          </Link>
-        </Col>
-      </Row>
+    <>
+      {isAdmin && (
+        <Container fluid className="mt-5">
+          <Row className="d-flex justify-content-between align-items-center mb-4">
+            <Col xs={12} md={6}>
+              <h1 className="text-primary">Gestione Eventi</h1>
+            </Col>
+            <Col xs={12} md={6} className="d-flex justify-content-md-end justify-content-start">
+              <Button variant="primary" className="me-2 text-light" onClick={() => setShowCreate(true)}>
+                ➕ Aggiungi Evento
+              </Button>
+              <Link to="/eventi">
+                <Button variant="secondary" className="text-light">
+                  ⬅️ Torna agli Eventi
+                </Button>
+              </Link>
+            </Col>
+          </Row>
 
-      {loading ? (
-        <div className="text-center mt-4">
-          <Spinner animation="border" variant="primary" />
-          <p className="mt-2 text-primary">Caricamento dati...</p>
-        </div>
-      ) : (
-        <Row>
-          <Col xs={12}>
-            <div className="table-responsive">
-              <Table striped bordered hover responsive="md" className="mt-4">
-                <thead>
-                  <tr style={{ backgroundColor: "#d9eaff" }}>
-                    <th>ID</th>
-                    <th>Titolo</th>
-                    <th>Descrizione</th>
-                    <th>Data</th>
-                    <th>Ospedale</th>
-                    <th>Azioni</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {eventi.map((evento) => (
-                    <tr key={evento.id}>
-                      <td>{evento.id}</td>
-                      <td>{evento.titolo}</td>
-                      <td>{evento.descrizione}</td>
-                      <td>{evento.data}</td>
-                      <td>{evento.ospedale.nome}</td>
-                      <td>
-                        <div className="d-flex gap-2">
-                          <Button
-                            variant="outline-primary"
-                            size="sm"
-                            className="px-2 py-1 d-flex align-items-center"
-                            onClick={() => handleShowPrenotati(evento)}
-                          >
-                            <People className="me-1" /> Prenotati
-                          </Button>
-
-                          <Button
-                            variant="outline-warning"
-                            size="sm"
-                            onClick={() => {
-                              setEditingEvento({
-                                ...evento,
-                                ospedaleId: evento.ospedale.id,
-                              });
-                              setShowEdit(true);
-                            }}
-                          >
-                            <PencilSquare size={18} />
-                          </Button>
-
-                          <Button variant="outline-danger" size="sm" onClick={() => handleApriModaleEliminazione(evento)}>
-                            <Trash size={18} />
-                          </Button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </Table>
+          {loading ? (
+            <div className="text-center mt-4">
+              <Spinner animation="border" variant="primary" />
+              <p className="mt-2 text-primary">Caricamento dati...</p>
             </div>
-          </Col>
-        </Row>
-      )}
-
-      {/* Modale Creazione */}
-      <Modal show={showCreate} onHide={() => setShowCreate(false)} centered>
-        <Modal.Header closeButton className="bg-primary text-light">
-          <Modal.Title>➕ Aggiungi Evento</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form>
-            <Form.Group>
-              <Form.Label>Titolo</Form.Label>
-              <Form.Control type="text" onChange={(e) => setNewEvento({ ...newEvento, titolo: e.target.value })} />
-            </Form.Group>
-            <Form.Group>
-              <Form.Label>Descrizione</Form.Label>
-              <Form.Control type="text" onChange={(e) => setNewEvento({ ...newEvento, descrizione: e.target.value })} />
-            </Form.Group>
-            <Form.Group>
-              <Form.Label>Data</Form.Label>
-              <Form.Control type="date" onChange={(e) => setNewEvento({ ...newEvento, data: e.target.value })} />
-            </Form.Group>
-            <Form.Group>
-              <Form.Label>Immagine</Form.Label>
-              <Form.Control type="file" onChange={(e) => setNewEvento({ ...newEvento, imgEvento: e.target.files[0] })} />
-            </Form.Group>
-            <Form.Group>
-              <Form.Label>Ospedale</Form.Label>
-              <Form.Select onChange={(e) => setNewEvento({ ...newEvento, ospedaleId: e.target.value })}>
-                <option value="">Seleziona un ospedale</option>
-                {ospedali.map((osp) => (
-                  <option key={osp.id} value={osp.id}>
-                    {osp.nome}
-                  </option>
-                ))}
-              </Form.Select>
-            </Form.Group>
-          </Form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="primary" className="text-light" onClick={handleCreateEvento}>
-            Salva
-          </Button>
-        </Modal.Footer>
-      </Modal>
-
-      {/* Modale Modifica */}
-      <Modal show={showEdit} onHide={() => setShowEdit(false)} centered>
-        <Modal.Header closeButton className="bg-primary text-light">
-          <Modal.Title>✏️ Modifica Evento</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form>
-            <Form.Group>
-              <Form.Label>Titolo</Form.Label>
-              <Form.Control type="text" value={editingEvento?.titolo} onChange={(e) => setEditingEvento({ ...editingEvento, titolo: e.target.value })} />
-            </Form.Group>
-            <Form.Group>
-              <Form.Label>Descrizione</Form.Label>
-              <Form.Control
-                type="text"
-                value={editingEvento?.descrizione}
-                onChange={(e) => setEditingEvento({ ...editingEvento, descrizione: e.target.value })}
-              />
-            </Form.Group>
-            <Form.Group>
-              <Form.Label>Data</Form.Label>
-              <Form.Control type="date" value={editingEvento?.data} onChange={(e) => setEditingEvento({ ...editingEvento, data: e.target.value })} />
-            </Form.Group>
-            <Form.Group>
-              <Form.Label>Ospedale</Form.Label>
-              <Form.Select
-                value={editingEvento?.ospedaleId || ""}
-                onChange={(e) =>
-                  setEditingEvento({
-                    ...editingEvento,
-                    ospedaleId: parseInt(e.target.value),
-                  })
-                }
-              >
-                <option value="">Seleziona un ospedale</option>
-                {ospedali.map((osp) => (
-                  <option key={osp.id} value={osp.id}>
-                    {osp.nome}
-                  </option>
-                ))}
-              </Form.Select>
-            </Form.Group>
-          </Form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="primary" className="text-light" onClick={handleEditEvento}>
-            Modifica
-          </Button>
-        </Modal.Footer>
-      </Modal>
-
-      {/* Modale Prenotati */}
-      <Modal show={showPrenotati} onHide={() => setShowPrenotati(false)} centered>
-        <Modal.Header closeButton className="bg-primary text-light">
-          <Modal.Title>👥 Utenti Prenotati {eventoCorrente ? `- ${eventoCorrente.titolo}` : ""}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {prenotati.length > 0 ? (
-            <ul>
-              {prenotati.map((utente) => (
-                <li key={utente.id}>
-                  {utente.nome} {utente.cognome} - {utente.email}
-                </li>
-              ))}
-            </ul>
           ) : (
-            <p className="text-center">Nessun utente prenotato a questo evento</p>
-          )}
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowPrenotati(false)}>
-            Chiudi
-          </Button>
-        </Modal.Footer>
-      </Modal>
+            <Row>
+              <Col xs={12}>
+                <div className="table-responsive">
+                  <Table striped bordered hover responsive="md" className="mt-4">
+                    <thead>
+                      <tr style={{ backgroundColor: "#d9eaff" }}>
+                        <th>ID</th>
+                        <th>Titolo</th>
+                        <th>Descrizione</th>
+                        <th>Data</th>
+                        <th>Ospedale</th>
+                        <th>Azioni</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {eventi.map((evento) => (
+                        <tr key={evento.id}>
+                          <td>{evento.id}</td>
+                          <td>{evento.titolo}</td>
+                          <td>{evento.descrizione}</td>
+                          <td>{evento.data}</td>
+                          <td>{evento.ospedale.nome}</td>
+                          <td>
+                            <div className="d-flex gap-2">
+                              <Button
+                                variant="outline-primary"
+                                size="sm"
+                                className="px-2 py-1 d-flex align-items-center"
+                                onClick={() => handleShowPrenotati(evento)}
+                              >
+                                <People className="me-1" /> Prenotati
+                              </Button>
 
-      {/* Modale Eliminazione */}
-      <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)} centered>
-        <Modal.Header closeButton className="bg-primary text-light">
-          <Modal.Title>⚠️ Conferma Eliminazione</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {eventoDaEliminare && (
-            <>
-              <p>Sei sicuro di voler eliminare l'evento:</p>
-              <p>
-                <strong>{eventoDaEliminare.titolo}</strong> – {eventoDaEliminare.data}
-                <br />
-                presso <strong>{eventoDaEliminare.ospedale.nome}</strong>
-              </p>
-            </>
-          )}
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
-            Annulla
-          </Button>
-          <Button variant="danger" onClick={handleConfermaEliminazione}>
-            Elimina
-          </Button>
-        </Modal.Footer>
-      </Modal>
+                              <Button
+                                variant="outline-warning"
+                                size="sm"
+                                onClick={() => {
+                                  setEditingEvento({
+                                    ...evento,
+                                    ospedaleId: evento.ospedale.id,
+                                  });
+                                  setShowEdit(true);
+                                }}
+                              >
+                                <PencilSquare size={18} />
+                              </Button>
 
-      {/* Modale Conferma Operazione */}
-      <Modal show={showConfermaModal} onHide={() => setShowConfermaModal(false)} centered>
-        <Modal.Header closeButton className="bg-primary text-light">
-          <Modal.Title>✅ Operazione completata</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <p>{messaggioConferma}</p>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="primary" onClick={() => setShowConfermaModal(false)}>
-            Chiudi
-          </Button>
-        </Modal.Footer>
-      </Modal>
-    </Container>
+                              <Button variant="outline-danger" size="sm" onClick={() => handleApriModaleEliminazione(evento)}>
+                                <Trash size={18} />
+                              </Button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </Table>
+                </div>
+              </Col>
+            </Row>
+          )}
+
+          {/* Modale Creazione */}
+          <Modal show={showCreate} onHide={() => setShowCreate(false)} centered>
+            <Modal.Header closeButton className="bg-primary text-light">
+              <Modal.Title>➕ Aggiungi Evento</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <Form>
+                <Form.Group>
+                  <Form.Label>Titolo</Form.Label>
+                  <Form.Control type="text" onChange={(e) => setNewEvento({ ...newEvento, titolo: e.target.value })} />
+                </Form.Group>
+                <Form.Group>
+                  <Form.Label>Descrizione</Form.Label>
+                  <Form.Control type="text" onChange={(e) => setNewEvento({ ...newEvento, descrizione: e.target.value })} />
+                </Form.Group>
+                <Form.Group>
+                  <Form.Label>Data</Form.Label>
+                  <Form.Control type="date" onChange={(e) => setNewEvento({ ...newEvento, data: e.target.value })} />
+                </Form.Group>
+                <Form.Group>
+                  <Form.Label>Immagine</Form.Label>
+                  <Form.Control type="file" onChange={(e) => setNewEvento({ ...newEvento, imgEvento: e.target.files[0] })} />
+                </Form.Group>
+                <Form.Group>
+                  <Form.Label>Ospedale</Form.Label>
+                  <Form.Select onChange={(e) => setNewEvento({ ...newEvento, ospedaleId: e.target.value })}>
+                    <option value="">Seleziona un ospedale</option>
+                    {ospedali.map((osp) => (
+                      <option key={osp.id} value={osp.id}>
+                        {osp.nome}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </Form.Group>
+              </Form>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="primary" className="text-light" onClick={handleCreateEvento}>
+                Salva
+              </Button>
+            </Modal.Footer>
+          </Modal>
+
+          {/* Modale Modifica */}
+          <Modal show={showEdit} onHide={() => setShowEdit(false)} centered>
+            <Modal.Header closeButton className="bg-primary text-light">
+              <Modal.Title>✏️ Modifica Evento</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <Form>
+                <Form.Group>
+                  <Form.Label>Titolo</Form.Label>
+                  <Form.Control type="text" value={editingEvento?.titolo} onChange={(e) => setEditingEvento({ ...editingEvento, titolo: e.target.value })} />
+                </Form.Group>
+                <Form.Group>
+                  <Form.Label>Descrizione</Form.Label>
+                  <Form.Control
+                    type="text"
+                    value={editingEvento?.descrizione}
+                    onChange={(e) => setEditingEvento({ ...editingEvento, descrizione: e.target.value })}
+                  />
+                </Form.Group>
+                <Form.Group>
+                  <Form.Label>Data</Form.Label>
+                  <Form.Control type="date" value={editingEvento?.data} onChange={(e) => setEditingEvento({ ...editingEvento, data: e.target.value })} />
+                </Form.Group>
+                <Form.Group>
+                  <Form.Label>Ospedale</Form.Label>
+                  <Form.Select
+                    value={editingEvento?.ospedaleId || ""}
+                    onChange={(e) =>
+                      setEditingEvento({
+                        ...editingEvento,
+                        ospedaleId: parseInt(e.target.value),
+                      })
+                    }
+                  >
+                    <option value="">Seleziona un ospedale</option>
+                    {ospedali.map((osp) => (
+                      <option key={osp.id} value={osp.id}>
+                        {osp.nome}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </Form.Group>
+              </Form>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="primary" className="text-light" onClick={handleEditEvento}>
+                Modifica
+              </Button>
+            </Modal.Footer>
+          </Modal>
+
+          {/* Modale Prenotati */}
+          <Modal show={showPrenotati} onHide={() => setShowPrenotati(false)} centered>
+            <Modal.Header closeButton className="bg-primary text-light">
+              <Modal.Title>👥 Utenti Prenotati {eventoCorrente ? `- ${eventoCorrente.titolo}` : ""}</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              {prenotati.length > 0 ? (
+                <ul>
+                  {prenotati.map((utente) => (
+                    <li key={utente.id}>
+                      {utente.nome} {utente.cognome} - {utente.email}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-center">Nessun utente prenotato a questo evento</p>
+              )}
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={() => setShowPrenotati(false)}>
+                Chiudi
+              </Button>
+            </Modal.Footer>
+          </Modal>
+
+          {/* Modale Eliminazione */}
+          <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)} centered>
+            <Modal.Header closeButton className="bg-primary text-light">
+              <Modal.Title>⚠️ Conferma Eliminazione</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              {eventoDaEliminare && (
+                <>
+                  <p>Sei sicuro di voler eliminare l'evento:</p>
+                  <p>
+                    <strong>{eventoDaEliminare.titolo}</strong> – {eventoDaEliminare.data}
+                    <br />
+                    presso <strong>{eventoDaEliminare.ospedale.nome}</strong>
+                  </p>
+                </>
+              )}
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
+                Annulla
+              </Button>
+              <Button variant="danger" onClick={handleConfermaEliminazione}>
+                Elimina
+              </Button>
+            </Modal.Footer>
+          </Modal>
+
+          {/* Modale Conferma Operazione */}
+          <Modal show={showConfermaModal} onHide={() => setShowConfermaModal(false)} centered>
+            <Modal.Header closeButton className="bg-primary text-light">
+              <Modal.Title>✅ Operazione completata</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <p>{messaggioConferma}</p>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="primary" onClick={() => setShowConfermaModal(false)}>
+                Chiudi
+              </Button>
+            </Modal.Footer>
+          </Modal>
+        </Container>
+      )}
+    </>
   );
 };
 

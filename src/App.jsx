@@ -1,7 +1,7 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 import Footer from "./components/Footer";
-import MyNavbar from "./components/MyNavbar";
+import MyNavbar from "./components/Navbar/MyNavbar";
 import { useDispatch } from "react-redux";
 import { autoLogin } from "./redux/authSlice";
 import { useEffect } from "react";

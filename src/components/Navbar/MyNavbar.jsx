@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { Button, Image, Navbar, Container, Nav } from "react-bootstrap";
 import { Link, useLocation } from "react-router-dom";
-import logo from "../assets/LogoGiveJoy.svg";
-import SignUpModal from "./SignUpModal";
-import LoginModal from "./LoginModal";
+import logo from "../../assets/LogoGiveJoy.svg";
+import SignUpModal from "../SignUpModal";
+import LoginModal from "../LoginModal";
 import { useSelector, useDispatch } from "react-redux";
-import { selectUser, resetToken, resetUser } from "../redux/authSlice";
+import { selectUser, resetToken, resetUser } from "../../redux/authSlice";
 
 const MyNavbar = () => {
   const location = useLocation();
@@ -17,10 +17,6 @@ const MyNavbar = () => {
   const handleLogout = () => {
     dispatch(resetToken()); // Rimuove il token dal localStorage
     dispatch(resetUser()); // Resetta l'utente nello store
-    // Se l'utente è su una pagina admin, lo riporta alla home
-    if (location.pathname.startsWith("/backoffice")) {
-      window.location.href = "/"; // Forza il reindirizzamento alla home
-    }
   };
 
   return (

@@ -1,10 +1,3 @@
-/* Assicura che la navbar rimanga sopra il contenuto senza trasparenze */
-#main-navbar {
-  top: 0;
-  left: 0;
-  z-index: 999;
-}
-
 /* Evita che il contenuto venga coperto dalla navbar */
 #homepage-container {
   padding-top: 90px; /* Altezza della navbar */

@@ -1,0 +1,13 @@
+/* Assicura che la navbar rimanga sopra il contenuto senza trasparenze */
+#main-navbar {
+  top: 0;
+  left: 0;
+  z-index: 999;
+}
+
+/* Assicura che la navbar rimanga sopra il contenuto senza trasparenze */
+#main-navbar {
+  top: 0;
+  left: 0;
+  z-index: 999;
+}
