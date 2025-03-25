@@ -1,21 +1,10 @@
 const urlBase = "http://localhost:8080/";
 
-/* const getConfig = (config = {}) => {
-
-  const token = localStorage.getItem("token")
-
-  return{
-    ...config, 
-    headers : {
-      Authorization : "Bearer " + token,
-    }
-  };
-}; */
 export const http = {
   getAuth: (url, config) => {
     return fetch(urlBase + url, config).then((res) => res.json());
   },
-  post: (url, data, config) => {
+  post: (url, data) => {
     return fetch(urlBase + url, {
       method: "POST",
       headers: {
@@ -24,7 +13,7 @@ export const http = {
       body: JSON.stringify(data),
     });
   },
-  get: (url, config) => {
+  get: (url) => {
     return fetch(urlBase + url);
   },
 

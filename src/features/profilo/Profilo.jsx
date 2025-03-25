@@ -4,9 +4,11 @@ import { useSelector } from "react-redux";
 import { selectUser } from "../../redux/authSlice";
 import { http } from "../../shared/utils/http";
 import { PersonCircle, Trash } from "react-bootstrap-icons";
+import { useNavigate } from "react-router-dom";
 
 const Profilo = () => {
   const user = useSelector(selectUser);
+  const navigate = useNavigate();
 
   const [eventiPrenotati, setEventiPrenotati] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -21,6 +23,13 @@ const Profilo = () => {
   const filtered = eventiPrenotati.filter((evento) => {
     return evento.titolo.toLowerCase().trim().includes(titolo.toLowerCase().trim()) && (!data || evento.data === data);
   });
+
+  // Redirect alla home se l'utente non è loggato
+  useEffect(() => {
+    if (!user) {
+      navigate("/");
+    }
+  }, [user, navigate]);
 
   useEffect(() => {
     if (!user || user.isAdmin) return;
