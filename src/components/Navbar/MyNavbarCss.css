@@ -1,13 +1,29 @@
-/* Assicura che la navbar rimanga sopra il contenuto senza trasparenze */
-#main-navbar {
-  top: 0;
-  left: 0;
-  z-index: 999;
+.navbar-custom {
+  background-color: #3c224d;
 }
 
-/* Assicura che la navbar rimanga sopra il contenuto senza trasparenze */
-#main-navbar {
-  top: 0;
-  left: 0;
-  z-index: 999;
+.navbar-btn-custom {
+  background-color: antiquewhite;
+  color: #6c5683;
+  font-weight: 600;
+  margin-left: 10px;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  border: none;
+}
+
+.navbar-btn-custom:hover {
+  background-color: #a59bbd;
+  color: whitesmoke;
+  box-shadow: 0 6px 12px rgba(248, 247, 247, 0.256);
+  transform: scale(1.1);
+}
+
+#navbar-link-custom {
+  font-weight: 600;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+#navbar-link-custom:hover {
+  transform: scale(1.1);
+  text-decoration: underline;
 }

@@ -1,5 +1,21 @@
+h1 {
+  color: #a59bbd;
+  text-shadow: 2px 2px 7px rgba(0, 0, 0, 0.272);
+}
+
+h3 {
+  color: #fcd53f;
+  text-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+p {
+  color: #3c224d;
+  font-weight: 600;
+}
+
 /* Evita che il contenuto venga coperto dalla navbar */
 #homepage-container {
+  background-color: whitesmoke;
   padding-top: 90px; /* Altezza della navbar */
 }
 
@@ -8,4 +24,45 @@
   #homepage-container {
     padding-top: 110px;
   }
+}
+
+#homepage-info {
+  background-color: #3c224d64;
+  color: antiquewhite;
+}
+
+#col-custom-first {
+  background-color: #82786ad4;
+  transition: all 0.3s ease;
+}
+#card-title-first {
+  color: #fcd53f;
+  font-weight: bold;
+}
+#col-custom-first:hover {
+  transform: scale(1.03);
+}
+
+#col-custom-second {
+  background-color: #ffd900b2;
+  transition: all 0.3s ease;
+}
+#card-title-second {
+  color: #3c224d;
+  font-weight: bold;
+}
+#col-custom-second:hover {
+  transform: scale(1.03);
+}
+
+#col-custom-third {
+  background-color: #a563ccd3;
+  transition: all 0.3s ease;
+}
+#card-title-third {
+  color: antiquewhite;
+  font-weight: bold;
+}
+#col-custom-third:hover {
+  transform: scale(1.03);
 }

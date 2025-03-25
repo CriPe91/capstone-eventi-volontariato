@@ -1,81 +1,91 @@
 import { Container, Row, Col, Carousel, Card, Image } from "react-bootstrap";
+import "./HomePage.css";
 
 const HomePage = () => {
   return (
     <>
-      <Container id="homepage-container" className="mt-5">
-        {/* Titolo e Introduzione */}
-        <Row id="homepage-title" className="text-center">
-          <Col>
-            <h1 className="fw-bold text-primary">Portiamo Sorrisi ai Bambini in Ospedale</h1>
-            <p className="fs-5">
-              Il nostro volontariato si dedica a regalare momenti di gioia e conforto ai bambini ricoverati, trasformando la loro degenza in un’esperienza più
-              serena e meno spaventosa.
-            </p>
-          </Col>
-        </Row>
-      </Container>
-
       {/* Carosello di Immagini */}
 
       <Carousel>
         <Carousel.Item>
           <Image
             className="w-100 object-fit-cover"
-            height={500}
+            height={490}
             src="https://www.avveniredicalabria.it/wp-content/uploads/2021/04/volontari-del-sorriso-0.jpg"
             alt="Volontari giocano con i bambini"
           />
           <Carousel.Caption>
-            <h3>Giochi e Intrattenimento</h3>
-            <p>Il gioco è una terapia potente che aiuta i bambini a sentirsi meno soli.</p>
+            <h2>Giochi e Intrattenimento</h2>
+            <p className="text-light">Il gioco è una terapia potente che aiuta i bambini a sentirsi meno soli.</p>
           </Carousel.Caption>
         </Carousel.Item>
         <Carousel.Item>
           <Image
             className="w-100 object-fit-cover"
-            height={500}
+            height={490}
             src="https://cdn.prod.website-files.com/5e8af888eaf48714ca48963a/610b9bd850b073e4e7d4054c_assistente%20sociale-volontariato-ponte-umanizzazione-cure--.png"
             alt="Lettura di favole ai bambini"
           />
           <Carousel.Caption>
-            <h3>Storie e Fantasia</h3>
-            <p>Un libro può trasportare un bambino in un mondo magico anche dal letto d’ospedale.</p>
+            <h2>Storie e Fantasia</h2>
+            <p className="text-light">Un libro può trasportare un bambino in un mondo magico anche dal letto d’ospedale.</p>
           </Carousel.Caption>
         </Carousel.Item>
         <Carousel.Item>
           <Image
             className="w-100 object-fit-cover"
-            height={500}
+            height={490}
             src="https://teniamocipermanoonlus.net/wp-content/themes/yootheme/cache/4e/Associazione-di-Clownterapia-Teniamoci-Per-Mano-4e658853.jpeg"
             alt="Artisti e musica per i bambini"
           />
           <Carousel.Caption>
-            <h3>Musica e Creatività</h3>
-            <p>La musica e il disegno aiutano a ridurre lo stress e a migliorare l'umore.</p>
+            <h2>Musica e Creatività</h2>
+            <p className="text-light">La musica e il disegno aiutano a ridurre lo stress e a migliorare l'umore.</p>
           </Carousel.Caption>
         </Carousel.Item>
       </Carousel>
 
-      <Container className="mt-5">
+      <Container fluid id="homepage-container" className="">
+        {/* Titolo e Introduzione */}
+        <Row id="homepage-title" className="text-center d-flex justify-content-center mb-5">
+          <Col md={8}>
+            <h1 className="fw-bold">“ Portiamo Sorrisi ai Bambini in Ospedale ”</h1>
+            <p className="fs-5">
+              Il nostro volontariato si dedica a regalare momenti di gioia e conforto ai bambini ricoverati, trasformando la loro degenza in un’esperienza più
+              serena e meno spaventosa.
+            </p>
+          </Col>
+        </Row>
+
         {/* Sezione di Sensibilizzazione*/}
-        <Row id="homepage-info" className="text-center">
-          <Col xs={12} md={6}>
-            <h3 className="text-primary text-start">🌟 Il Volontariato che fa la Differenza</h3>
-            <p className="text-start">
+        <Row id="homepage-info" className="p-5 text-center d-flex align-items-center justify-content-around">
+          <Col xs={12} md={9} className="">
+            <h3 className=" text-center mb-4">Il Volontariato che fa la Differenza</h3>
+            <p className="text-center mb-3">
               Ogni anno, migliaia di bambini in Italia affrontano lunghi periodi di ricovero ospedaliero a causa di malattie gravi o trattamenti intensivi.
               Questo può risultare un'esperienza difficile, spesso segnata da paura, solitudine e stress. Tuttavia, un piccolo gesto di gentilezza può fare una
               grande differenza. Il volontariato ospedaliero aiuta a creare un ambiente più accogliente, trasformando i reparti pediatrici in luoghi di
               speranza, gioia e creatività.
             </p>
-            <p className="text-start">
+            <Image
+              fluid
+              className="rounded shadow-lg border border-3 border-light"
+              width={500}
+              src="https://assets.gazzettadelsud.it/2021/11/4a607f41-3eae-453d-9bc6-f0fae427b654.jpg"
+            />
+            <p className="text-center mt-3">
               I nostri volontari dedicano il loro tempo ai piccoli pazienti con attività ludiche, artistiche e di intrattenimento. Attraverso giochi, racconti,
               musica e momenti di socializzazione, offriamo ai bambini un'occasione per evadere, anche solo per un attimo, dalla loro realtà ospedaliera. Un
               sorriso, una storia raccontata, una risata condivisa possono rendere la degenza meno spaventosa e più umana.
             </p>
           </Col>
-          <Col xs={12} md={6}>
-            <h3 className="text-primary text-end">Perchè diventare volontario? 🤝</h3>
+        </Row>
+        <Row>
+          <Col>
+            <Image />
+          </Col>
+          <Col xs={12} md={4}>
+            <h3 className=" text-end">Perchè diventare volontario? 🤝</h3>
             <p className="text-end">
               Diventare volontario è un'esperienza straordinaria e arricchente, che permette di portare sollievo e speranza a chi ne ha più bisogno. La nostra
               organizzazione accoglie chiunque abbia voglia di donare il proprio tempo e la propria energia per fare la differenza. Non servono competenze
@@ -92,9 +102,9 @@ const HomePage = () => {
         {/* Card Informative */}
         <Row id="homepage-cards" className="mt-5 text-center">
           <Col xs={12} md={4}>
-            <Card className="text-center p-3 shadow">
+            <Card id="col-custom-first" className="text-center p-3 shadow mb-xs-3 mb-sm-3 mb-md-3">
               <Card.Body>
-                <Card.Title className="text-primary">🎨 Laboratori Creativi</Card.Title>
+                <Card.Title id="card-title-first">🎨 Laboratori Creativi</Card.Title>
                 <Card.Text>
                   Disegno, pittura e lavoretti manuali per stimolare la creatività e offrire un momento di distrazione ai bambini in ospedale. Un'opportunità
                   per esprimersi, sviluppare il talento e vivere un’esperienza positiva.
@@ -103,9 +113,9 @@ const HomePage = () => {
             </Card>
           </Col>
           <Col xs={12} md={4}>
-            <Card className="text-center p-3 shadow">
+            <Card id="col-custom-second" className="text-center p-3 shadow mb-xs-3 mb-sm-3 mb-md-3">
               <Card.Body>
-                <Card.Title className="text-primary">📖 Racconti e Favole</Card.Title>
+                <Card.Title id="card-title-second">📖 Racconti e Favole</Card.Title>
                 <Card.Text>
                   Storie narrate dai volontari per trasportare i bambini in mondi fantastici, stimolare la loro immaginazione e aiutarli a dimenticare, anche
                   solo per un attimo, il contesto ospedaliero in cui si trovano.
@@ -114,9 +124,9 @@ const HomePage = () => {
             </Card>
           </Col>
           <Col xs={12} md={4}>
-            <Card className="text-center p-3 shadow">
+            <Card id="col-custom-third" className="text-center p-3 shadow mb-xs-3 mb-sm-3 mb-md-3">
               <Card.Body>
-                <Card.Title className="text-primary">🎭 Spettacoli e Animazione</Card.Title>
+                <Card.Title id="card-title-third">🎭 Spettacoli e Animazione</Card.Title>
                 <Card.Text>
                   Clown, Super Eroi e magia per regalare sorrisi e momenti di leggerezza ai piccoli pazienti. L’allegria e il gioco diventano strumenti
                   terapeutici capaci di migliorare l’umore e ridurre la paura del contesto medico.
@@ -129,7 +139,7 @@ const HomePage = () => {
         {/* Citazioni e Aforismi Motivazionali */}
         <Row id="homepage-quotes" className="mt-5 text-center">
           <Col>
-            <h2 className="text-primary">🌞 Pensieri che Ispirano 🌞</h2>
+            <h3 className="text-primary">🌞 Pensieri che Ispirano 🌞</h3>
             <Carousel indicators={false} controls={false} className="mt-3 w-50 mx-auto">
               <Carousel.Item>
                 <Card className="text-center p-3">
