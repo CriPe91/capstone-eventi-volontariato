@@ -1,0 +1,12 @@
+#link-footer .nav-link {
+  color: black;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+#link-footer .nav-link:hover {
+  color: #3c224d;
+  transform: scale(1.08);
+  font-weight: bold;
+  text-decoration: underline;
+}

@@ -1,5 +1,6 @@
-import { Container, Row, Col, Carousel, Card, Image } from "react-bootstrap";
+import { Container, Row, Col, Carousel, Card, Image, Button } from "react-bootstrap";
 import "./HomePage.css";
+import { Link } from "react-router-dom";
 
 const HomePage = () => {
   return (
@@ -45,20 +46,25 @@ const HomePage = () => {
         </Carousel.Item>
       </Carousel>
 
-      <Container fluid id="homepage-container" className="">
-        {/* Titolo e Introduzione */}
-        <Row id="homepage-title" className="text-center d-flex justify-content-center mb-5">
+      {/* Titolo e Introduzione */}
+      <Container fluid id="homepage-title">
+        <Row className="text-center d-flex justify-content-center">
           <Col md={8}>
-            <h1 className="fw-bold">“ Portiamo Sorrisi ai Bambini in Ospedale ”</h1>
+            <h1 className="fw-bold">“Portiamo Sorrisi ai Bambini in Ospedale”</h1>
             <p className="fs-5">
               Il nostro volontariato si dedica a regalare momenti di gioia e conforto ai bambini ricoverati, trasformando la loro degenza in un’esperienza più
               serena e meno spaventosa.
             </p>
           </Col>
         </Row>
+      </Container>
 
-        {/* Sezione di Sensibilizzazione*/}
-        <Row id="homepage-info" className="p-5 text-center d-flex align-items-center justify-content-around">
+      {/* Sezione di Sensibilizzazione*/}
+      <Container fluid id="homepage-container" className="">
+        <Row
+          id="homepage-info"
+          className="p-5 text-center d-flex align-items-center justify-content-around border border-dark border-bottom-5 border-top-5 border-start-0 border-end-0"
+        >
           <Col xs={12} md={9} className="">
             <h3 className=" text-center mb-4">Il Volontariato che fa la Differenza</h3>
             <p className="text-center mb-3">
@@ -80,93 +86,92 @@ const HomePage = () => {
             </p>
           </Col>
         </Row>
-        <Row>
-          <Col>
-            <Image />
-          </Col>
-          <Col xs={12} md={4}>
-            <h3 className=" text-end">Perchè diventare volontario? 🤝</h3>
-            <p className="text-end">
-              Diventare volontario è un'esperienza straordinaria e arricchente, che permette di portare sollievo e speranza a chi ne ha più bisogno. La nostra
-              organizzazione accoglie chiunque abbia voglia di donare il proprio tempo e la propria energia per fare la differenza. Non servono competenze
-              specifiche: basta il desiderio di aiutare e la volontà di ascoltare.
-            </p>
-            <p className="text-end">
-              Organizziamo eventi speciali, laboratori creativi, spettacoli di magia, letture animate e tante altre attività per rendere il soggiorno in
-              ospedale un’esperienza più leggera. Ogni volontario diventa parte di una grande famiglia che condivide l’obiettivo comune di portare gioia ai
-              bambini in difficoltà. La solidarietà, il rispetto e l’empatia sono i valori fondamentali che guidano ogni nostra iniziativa.
-            </p>
-          </Col>
-        </Row>
-
+      </Container>
+      <Container fluid id="container-cards">
         {/* Card Informative */}
-        <Row id="homepage-cards" className="mt-5 text-center">
-          <Col xs={12} md={4}>
-            <Card id="col-custom-first" className="text-center p-3 shadow mb-xs-3 mb-sm-3 mb-md-3">
+        <Row id="homepage-cards" className="pt-3 pb-1">
+          <Col xs={12} md={4} lg={4} className="mb-xs-3 mb-sm-3 mb-md-3">
+            <Card id="col-custom-first" className="text-center p-3 shadow ">
               <Card.Body>
                 <Card.Title id="card-title-first">🎨 Laboratori Creativi</Card.Title>
                 <Card.Text>
                   Disegno, pittura e lavoretti manuali per stimolare la creatività e offrire un momento di distrazione ai bambini in ospedale. Un'opportunità
                   per esprimersi, sviluppare il talento e vivere un’esperienza positiva.
                 </Card.Text>
+                <Button id="btn-card-first" as={Link} to={"/eventi"}>
+                  Unisciti a Noi
+                </Button>
               </Card.Body>
             </Card>
           </Col>
-          <Col xs={12} md={4}>
-            <Card id="col-custom-second" className="text-center p-3 shadow mb-xs-3 mb-sm-3 mb-md-3">
+          <Col xs={12} md={4} lg={4} className="mb-xs-3 mb-sm-3 mb-md-3">
+            <Card id="col-custom-second" className="text-center p-3 shadow ">
               <Card.Body>
                 <Card.Title id="card-title-second">📖 Racconti e Favole</Card.Title>
                 <Card.Text>
                   Storie narrate dai volontari per trasportare i bambini in mondi fantastici, stimolare la loro immaginazione e aiutarli a dimenticare, anche
-                  solo per un attimo, il contesto ospedaliero in cui si trovano.
+                  solo per un attimo, il contesto ospedaliero in cui si trovano i nostri piccoli guerrieri.
                 </Card.Text>
+                <Button id="btn-card-second" as={Link} to={"/eventi"}>
+                  Unisciti a Noi
+                </Button>
               </Card.Body>
             </Card>
           </Col>
-          <Col xs={12} md={4}>
-            <Card id="col-custom-third" className="text-center p-3 shadow mb-xs-3 mb-sm-3 mb-md-3">
+          <Col xs={12} md={4} lg={4} className="mb-xs-3 mb-sm-3 mb-md-3">
+            <Card id="col-custom-third" className="text-center p-3 shadow ">
               <Card.Body>
                 <Card.Title id="card-title-third">🎭 Spettacoli e Animazione</Card.Title>
                 <Card.Text>
                   Clown, Super Eroi e magia per regalare sorrisi e momenti di leggerezza ai piccoli pazienti. L’allegria e il gioco diventano strumenti
                   terapeutici capaci di migliorare l’umore e ridurre la paura del contesto medico.
                 </Card.Text>
+                <Button id="btn-card-third" as={Link} to={"/eventi"}>
+                  Unisciti a Noi
+                </Button>
               </Card.Body>
             </Card>
           </Col>
         </Row>
+      </Container>
 
-        {/* Citazioni e Aforismi Motivazionali */}
-        <Row id="homepage-quotes" className="mt-5 text-center">
-          <Col>
-            <h3 className="text-primary">🌞 Pensieri che Ispirano 🌞</h3>
-            <Carousel indicators={false} controls={false} className="mt-3 w-50 mx-auto">
-              <Carousel.Item>
-                <Card className="text-center p-3">
-                  <Card.Body>
-                    <Card.Text className="fs-6 fst-italic">"Un bambino che sorride è un bambino che sta guarendo dentro e fuori."</Card.Text>
-                    <Card.Footer className="blockquote-footer">Anonimo</Card.Footer>
-                  </Card.Body>
-                </Card>
-              </Carousel.Item>
-              <Carousel.Item>
-                <Card className="text-center p-3">
-                  <Card.Body>
-                    <Card.Text className="fs-6 fst-italic">"La gentilezza è una medicina che non ha effetti collaterali."</Card.Text>
-                    <Card.Footer className="blockquote-footer">Albert Schweitzer</Card.Footer>
-                  </Card.Body>
-                </Card>
-              </Carousel.Item>
-              <Carousel.Item>
-                <Card className="text-center p-3">
-                  <Card.Body>
-                    <Card.Text className="fs-6 fst-italic">"Se puoi fare una sola cosa oggi, falla con amore."</Card.Text>
-                    <Card.Footer className="blockquote-footer">Madre Teresa di Calcutta</Card.Footer>
-                  </Card.Body>
-                </Card>
-              </Carousel.Item>
-            </Carousel>
+      <Container fluid>
+        <Row
+          id="homepage-volontier"
+          className="d-flex justify-content-around align-items-center p-5 border border-dark border-bottom-5 border-top-5 border-start-0 border-end-0"
+        >
+          <Col xs={12} md={6}>
+            <Image
+              fluid
+              width={550}
+              src="https://www.italiachecambia.org/wp-content/uploads/2023/04/fonsazione-dottor-sorriso-1024x680.jpg"
+              className="rounded shadow"
+            />
           </Col>
+          <Col xs={12} md={5} className=" text-start">
+            <h3>Perchè diventare volontario? 🤝</h3>
+            <p>
+              Diventare volontario è un'esperienza straordinaria e arricchente, che permette di portare sollievo e speranza a chi ne ha più bisogno. La nostra
+              organizzazione accoglie chiunque abbia voglia di donare il proprio tempo e la propria energia per fare la differenza. Non servono competenze
+              specifiche: basta il desiderio di aiutare e la volontà di ascoltare.
+            </p>
+            <p>
+              Organizziamo eventi speciali, laboratori creativi, spettacoli di magia, letture animate e tante altre attività per rendere il soggiorno in
+              ospedale un’esperienza più leggera. Ogni volontario diventa parte di una grande famiglia che condivide l’obiettivo comune di portare gioia ai
+              bambini in difficoltà. La solidarietà, il rispetto e l’empatia sono i valori fondamentali che guidano ogni nostra iniziativa.
+            </p>
+            <Button variant="outline-dark" className="button align-items-center fw-bold" to="/chisiamo">
+              <span className="">Scopri come diventare un volontario </span>
+            </Button>
+          </Col>
+        </Row>
+
+        {/* Banner */}
+
+        <Row md={2}>
+          <Image className="p-0" fluid src="/src/assets/GIVE_JOY_banner_footer.gif" width={500} />
+
+          <Image className="p-0" fluid src="/src/assets/GIVE_JOY_banner.gif" width={500} />
         </Row>
       </Container>
     </>

@@ -1,75 +1,75 @@
 import { Col, Container, Row } from "react-bootstrap";
 import { Link, useLocation } from "react-router-dom";
 import { Facebook, Instagram, Twitter, Linkedin } from "react-bootstrap-icons";
-import Marquee from "react-fast-marquee";
+import "../components/FooterCss.css";
 
 const Footer = () => {
   const location = useLocation();
 
   return (
-    <Container fluid className="mt-4 pt-3">
-      <Row className="text-center justify-content-center mb-3 bg-primary">
-        <Col className="text-light">
-          <Marquee>
-            <p className="fs-5 mb-0 pb-0 ">
+    <>
+      <Container fluid className="">
+        <Row className="text-center justify-content-center mb-3 py-3" style={{ backgroundColor: "#3c224d", color: "white" }}>
+          <Col className="text-light">
+            <h5 className="fs-5 mb-0 pb-0 ">
               Unisciti a noi negli ospedali e fai la differenza nella vita di tanti pazienti.
               <br />
               <span className="text-emphasis fw-semibold">Porta un sorriso a chi ne ha più bisogno</span>
-            </p>
-          </Marquee>
-        </Col>
-      </Row>
+            </h5>
+          </Col>
+        </Row>
 
-      <Row className="text-center justify-content-center mt-3">
-        <Col md={6} className="border-top border-2 border-dark">
-          <nav className="d-flex flex-wrap justify-content-center gap-2 pt-3">
-            <Link className={`nav-link text-dark ${location.pathname === "/" ? "active" : ""}`} to="/">
-              Home
-            </Link>
-            <Link className={`nav-link text-dark ${location.pathname === "/ospedali" ? "active" : ""}`} to="/ospedali">
-              Ospedali
-            </Link>
-            <Link className={`nav-link text-dark ${location.pathname === "/eventi" ? "active" : ""}`} to="/eventi">
-              Eventi
-            </Link>
-            <Link className="nav-link text-dark" to="#contatti">
-              Contatti
-            </Link>
-            <Link className="nav-link text-dark" to="#privacy">
-              Privacy Policy
-            </Link>
-            <Link className="nav-link text-dark" to="#termini">
-              Termini di Servizio
-            </Link>
-          </nav>
-        </Col>
-      </Row>
+        <Row className="text-center justify-content-center mt-3 pt-3">
+          <Col id="link-footer" xs={8} md={7} lg={6} className="border-top border-2 border-dark">
+            <nav className="d-flex flex-wrap justify-content-center gap-3 pt-3">
+              <Link className={`nav-link  ${location.pathname === "/" ? "active" : ""}`} to="/">
+                Home
+              </Link>
+              <Link className={`nav-link  ${location.pathname === "/ospedali" ? "active" : ""}`} to="/ospedali">
+                Ospedali
+              </Link>
+              <Link className={`nav-link  ${location.pathname === "/eventi" ? "active" : ""}`} to="/eventi">
+                Eventi
+              </Link>
+              <Link className="nav-link " to="#contatti">
+                Chi Siamo
+              </Link>
+              <Link className="nav-link " to="#privacy">
+                Privacy Policy
+              </Link>
+              <Link className="nav-link " to="#termini">
+                Termini di Servizio
+              </Link>
+            </nav>
+          </Col>
+        </Row>
 
-      <Row className="text-center">
-        <Col>
-          <div className="d-flex justify-content-center gap-4">
-            <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer" className="fs-4" style={{ color: "#1877F2" }}>
+        <Row className="d-flex justify-content-center text-center pb-3 mt-2">
+          <Col xs={8} md={7} lg={6} className="d-flex flex-wrap justify-content-center gap-4 border-bottom border-2 border-dark pb-3">
+            <Link to="https://www.facebook.com" target="_blank" rel="noopener noreferrer" className="fs-2" style={{ color: "#1877F2" }}>
               <Facebook />
-            </a>
-            <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer" className="fs-4" style={{ color: "#E4405F" }}>
+            </Link>
+            <Link to="https://www.instagram.com" target="_blank" rel="noopener noreferrer" className="fs-2" style={{ color: "#E4405F" }}>
               <Instagram />
-            </a>
-            <a href="https://www.twitter.com" target="_blank" rel="noopener noreferrer" className="fs-4" style={{ color: "#1DA1F2" }}>
+            </Link>
+            <Link to="https://www.twitter.com" target="_blank" rel="noopener noreferrer" className="fs-2" style={{ color: "#1DA1F2" }}>
               <Twitter />
-            </a>
-            <a href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer" className="fs-4" style={{ color: "#0A66C2" }}>
+            </Link>
+            <Link to="https://www.linkedin.com" target="_blank" rel="noopener noreferrer" className="fs-2" style={{ color: "#0A66C2" }}>
               <Linkedin />
-            </a>
-          </div>
-        </Col>
-      </Row>
+            </Link>
+          </Col>
+        </Row>
+      </Container>
 
-      <Row className="mt-3 mb-1">
-        <Col className="text-center text-dark">
-          <span>&copy; {new Date().getFullYear()} Give Joy. Tutti i diritti riservati.</span>
-        </Col>
-      </Row>
-    </Container>
+      <Container fluid style={{ backgroundColor: "#3c224d" }}>
+        <Row className="mt-3 py-2">
+          <Col className="text-center text-light">
+            <span>&copy; {new Date().getFullYear()} Give Joy. Tutti i diritti riservati.</span>
+          </Col>
+        </Row>
+      </Container>
+    </>
   );
 };
 
