@@ -1,0 +1,58 @@
+.card-valore {
+  background-color: #fff;
+  border: none;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+  text-align: center;
+}
+
+.card-valore:hover {
+  transform: scale(1.05);
+}
+
+.card-valore p {
+  margin-bottom: 0;
+}
+
+/* Titoli */
+#chi-title h1 {
+  color: #a59bbd;
+  text-shadow: 2px 2px 7px rgba(0, 0, 0, 0.272);
+}
+
+#chi-title p {
+  color: #3c224d;
+  font-weight: 600;
+}
+
+#chi-missione {
+  background-color: #3c224d64;
+  color: #fffaf5;
+}
+
+#chi-valori h3,
+#chi-unisciti h3,
+#chi-contatti h3 {
+  color: #a59bbd;
+  text-shadow: 2px 2px 7px rgba(0, 0, 0, 0.272);
+  font-weight: bold;
+}
+
+#chi-missione h3 {
+  color: peachpuff;
+  text-shadow: 2px 2px 7px rgba(0, 0, 0, 0.272);
+  font-weight: bold;
+}
+
+#chi-unisciti {
+  background-color: #ffd900b2;
+}
+
+#chi-contatti {
+  background-color: #82786a2d;
+}
+
+#chi-container {
+  background-color: whitesmoke;
+  padding-top: 90px;
+}

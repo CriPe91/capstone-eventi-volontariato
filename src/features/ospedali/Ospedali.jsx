@@ -4,6 +4,7 @@ import { http } from "../../shared/utils/http";
 import { Link, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../redux/authSlice";
+import "./OspedaliCss.css";
 
 const Ospedali = () => {
   const [ospedali, setOspedali] = useState([]);
@@ -14,12 +15,6 @@ const Ospedali = () => {
   const getAllOspedali = async () => {
     try {
       const data = await http.getAuth("ospedali");
-
-      /* if (!response.ok) {
-        throw new Error("Errore nel caricamento degli ospedali");
-      } */
-
-      /* const data = await response.json(); */
 
       setOspedali(data || []);
     } catch (error) {
@@ -35,20 +30,27 @@ const Ospedali = () => {
 
   return (
     <Container id="ospedali-container" className="mt-5">
-      <div className="d-flex justify-content-between align-items-center">
-        <h1 className="text-primary">Ospedali Disponibili</h1>
+      <Row className="mb-3">
+        <Col xs={12} md={8}>
+          <h1 className="">Ospedali Disponibili</h1>
+          <p className="mt-3 text-muted" style={{ maxWidth: "100%", fontSize: "1.05rem" }}>
+            Gli ospedali sono luoghi di cura, ma anche di attesa e fragilità. La nostra presenza vuole portare colore, ascolto e leggerezza dove spesso ci sono
+            silenzio e preoccupazione. In questa sezione puoi scoprire le strutture in cui operiamo per donare momenti di umanità e sorriso ai piccoli pazienti.
+          </p>
+        </Col>
 
-        {/* Mostriamo il pulsante solo se l'utente è Admin */}
         {user?.isAdmin && location.pathname === "/ospedali" && (
-          <Link to="/backoffice-ospedali">
-            <Button variant="warning" className="fw-semibold">
-              🛠️ Gestisci
-            </Button>
-          </Link>
+          <Col xs={12} md={4} className="d-flex justify-content-md-end justify-content-start align-items-center mt-3 mt-md-0">
+            <Link to="/backoffice-ospedali">
+              <Button variant="warning" className="fw-semibold">
+                🛠️ Gestisci
+              </Button>
+            </Link>
+          </Col>
         )}
-      </div>
+      </Row>
 
-      <Row className="mt-4 justify-content-center g-4">
+      <Row className="mt-4 justify-content-center g-4 mb-4">
         {loading ? (
           <Col className="text-center mt-5">
             <Spinner animation="border" role="status" variant="primary" size="lg">
@@ -58,8 +60,8 @@ const Ospedali = () => {
           </Col>
         ) : ospedali.length > 0 ? (
           ospedali.map((ospedale) => (
-            <Col key={ospedale.id} xs={12} md={6} lg={4} className="d-flex">
-              <Card className="shadow-lg p-3 mb-4 d-flex flex-column h-100">
+            <Col key={ospedale.id} xs={12} md={6} lg={4} className="d-flex align-items-stretch">
+              <Card className="card-ospedali shadow-lg p-3 mb-4 d-flex flex-column w-100">
                 <Card.Img
                   variant="top"
                   src={ospedale.imgOspedale}
@@ -68,7 +70,7 @@ const Ospedali = () => {
                   style={{ height: "250px", objectFit: "cover", width: "100%" }}
                 />
                 <Card.Body className="d-flex flex-column">
-                  <Card.Title className="text-primary">{ospedale.nome}</Card.Title>
+                  <Card.Title className="ospedale-title">{ospedale.nome}</Card.Title>
                   <Card.Text>
                     📍 <strong>Indirizzo:</strong> {ospedale.indirizzo} <br />
                     ✉️ <strong>Email:</strong> {ospedale.email}

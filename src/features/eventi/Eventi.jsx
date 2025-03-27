@@ -4,6 +4,7 @@ import { http } from "../../shared/utils/http";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../redux/authSlice";
 import { Link, useLocation } from "react-router-dom";
+import "./EventiCss.css";
 
 const Eventi = () => {
   const [eventi, setEventi] = useState([]);
@@ -98,18 +99,29 @@ const Eventi = () => {
 
   return (
     <Container id="eventi-container" className="mt-5">
-      <div className="d-flex justify-content-between align-items-center">
-        <h1 className="text-primary">Eventi Disponibili</h1>
-        {user?.isAdmin && location.pathname === "/eventi" && (
-          <Link to="/backoffice-eventi">
-            <Button variant="warning" className="fw-semibold">
-              🛠️ Gestisci
-            </Button>
-          </Link>
-        )}
-      </div>
+      <Row className="mb-3">
+        <Col xs={12} md={8}>
+          <h1 className="">Eventi Disponibili</h1>
+          <p className="mt-3 text-muted" style={{ maxWidth: "100%", fontSize: "1.05rem" }}>
+            Gli eventi rappresentano il cuore pulsante della nostra iniziativa. Non sono solo momenti da vivere, ma vere e proprie esperienze di condivisione,
+            creatività, ascolto e affetto che rendono più leggera la permanenza in ospedale. Partecipare a un evento GIVE JOY significa scegliere di esserci con
+            il cuore, regalare un sorriso, costruire connessioni autentiche. In questa sezione trovi tutti gli appuntamenti attivi: unisciti a noi per
+            trasformare ogni giornata in un'opportunità di umanità.
+          </p>
+        </Col>
 
-      <Row className="mt-4 justify-content-center g-4">
+        {user?.isAdmin && location.pathname === "/eventi" && (
+          <Col xs={12} md={4} className="d-flex justify-content-md-end justify-content-start align-items-center mt-3 mt-md-0">
+            <Link to="/backoffice-eventi">
+              <Button variant="warning" className="fw-semibold">
+                🛠️ Gestisci
+              </Button>
+            </Link>
+          </Col>
+        )}
+      </Row>
+
+      <Row className="mt-4 justify-content-center g-4 mb-4">
         {loading ? (
           <Col className="text-center mt-5">
             <Spinner animation="border" role="status" variant="primary" size="lg">
@@ -123,7 +135,7 @@ const Eventi = () => {
 
             return (
               <Col key={evento.id} xs={12} md={6} lg={4} className="d-flex">
-                <Card className="shadow-lg p-3 mb-4 d-flex flex-column h-100">
+                <Card className="card-eventi shadow-lg p-3 mb-4 d-flex flex-column h-100">
                   <Card.Img
                     variant="top"
                     src={evento.imgEvento}
@@ -132,7 +144,7 @@ const Eventi = () => {
                     style={{ height: "250px", objectFit: "cover", width: "100%" }}
                   />
                   <Card.Body className="d-flex flex-column">
-                    <Card.Title className="text-primary">{evento.titolo}</Card.Title>
+                    <Card.Title className="eventi-title">{evento.titolo}</Card.Title>
                     <Card.Text>
                       📅 <strong>Data:</strong> {evento.data} <br />
                       🏥 <strong>Ospedale:</strong> {evento.ospedale.nome} <br />

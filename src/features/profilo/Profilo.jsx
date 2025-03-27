@@ -5,6 +5,7 @@ import { selectUser } from "../../redux/authSlice";
 import { http } from "../../shared/utils/http";
 import { PersonCircle, Trash } from "react-bootstrap-icons";
 import { useNavigate } from "react-router-dom";
+import "./ProfiloCss.css";
 
 const Profilo = () => {
   const user = useSelector(selectUser);
@@ -75,8 +76,8 @@ const Profilo = () => {
       <Row className="justify-content-center">
         <Col xs={12} md={8}>
           <div className="text-center">
-            <PersonCircle size={80} className="text-primary" />
-            <h2 className="text-primary mt-3">Profilo Utente</h2>
+            <PersonCircle size={80} className="person-circle" />
+            <h2 className=" mt-3">Profilo Utente</h2>
             <p className="fw-semibold">
               {user?.nome} {user?.cognome}
             </p>
@@ -87,7 +88,7 @@ const Profilo = () => {
 
       <Row className="mt-4">
         <Col xs={12}>
-          <h4 className="text-primary">Eventi a cui sei prenotato</h4>
+          <h4 className="">Eventi a cui sei prenotato</h4>
 
           <Row className="mb-3">
             <Col md={5}>
@@ -120,8 +121,14 @@ const Profilo = () => {
                     <td>{evento.data}</td>
                     <td>{evento.ospedale.nome}</td>
                     <td>
-                      <Button variant="outline-danger" size="sm" onClick={() => handleApriModaleAnnullamento(evento)}>
-                        <Trash size={18} /> Annulla
+                      <Button
+                        variant="outline-danger"
+                        size="sm"
+                        className="d-flex align-items-center justify-content-center gap-1 w-auto mx-auto px-2 py-1 text-nowrap"
+                        onClick={() => handleApriModaleAnnullamento(evento)}
+                      >
+                        <Trash size={16} />
+                        <span className="d-none d-sm-inline">Annulla</span>
                       </Button>
                     </td>
                   </tr>

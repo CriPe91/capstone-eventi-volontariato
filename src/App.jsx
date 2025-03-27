@@ -12,6 +12,7 @@ import Eventi from "./features/eventi/Eventi";
 import BackOfficeOspedali from "./features/GestionaliAdmin/BackOfficeOspedali";
 import BackOfficeEventi from "./features/GestionaliAdmin/BackOfficeEventi";
 import Profilo from "./features/profilo/Profilo";
+import ChiSiamo from "./features/ChiSiamo/ChiSiamo";
 
 function App() {
   const dispatch = useDispatch();
@@ -26,6 +27,7 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/ospedali" element={<Ospedali />} />
         <Route path="/eventi" element={<Eventi />} />
+        <Route path="/chi-siamo" element={<ChiSiamo />} />
         <Route path="/backoffice-ospedali" element={<BackOfficeOspedali />} />
         <Route path="/backoffice-eventi" element={<BackOfficeEventi />} />
         <Route path="/profilo" element={<Profilo />} />

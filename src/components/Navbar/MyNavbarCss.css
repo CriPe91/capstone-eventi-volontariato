@@ -18,6 +18,21 @@
   transform: scale(1.1);
 }
 
+.navbar-btn-custom:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.navbar-btn-custom:active,
+.navbar-btn-custom.active,
+.navbar-btn-custom:focus:active {
+  background-color: #a59bbd !important;
+  color: whitesmoke !important;
+  box-shadow: none !important;
+  transform: scale(1.1) !important;
+  border: none !important;
+}
+
 #navbar-link-custom {
   font-weight: 600;
   transition: background-color 0.3s ease, transform 0.3s ease;

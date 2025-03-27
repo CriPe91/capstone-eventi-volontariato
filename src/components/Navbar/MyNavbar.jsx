@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, Image, Navbar, Container, Nav } from "react-bootstrap";
+import { Button, Image, Navbar, Container, Nav, Row, Col } from "react-bootstrap";
 import { Link, useLocation } from "react-router-dom";
 import SignUpModal from "../SignUpModal";
 import LoginModal from "../LoginModal";
@@ -13,37 +13,65 @@ const MyNavbar = () => {
   const [showSignUp, setShowSignUp] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
   const user = useSelector(selectUser); // Recuperiamo l'utente da Redux
+  const [expanded, setExpanded] = useState(false);
 
   const handleLogout = () => {
     dispatch(resetToken()); // Rimuove il token dal localStorage
     dispatch(resetUser()); // Resetta l'utente nello store
   };
 
+  // Metodo : Chiude il toggle al click del link/Torna in cima al cambio pagina
+  const handleNavLinkClick = () => {
+    setExpanded(false);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
     <>
-      <Navbar sticky="top" expand="lg" className="navbar-custom p-4 shadow-lg">
+      <Navbar sticky="top" expand="lg" className="navbar-custom shadow-lg" expanded={expanded}>
         <Container fluid>
-          <Navbar.Brand as={Link} to="/" className="d-flex align-items-center">
-            <span className="fw-semibold text-light fs-2 ms-0 me-3">
-              GIVE <Image src="https://cdn-icons-png.flaticon.com/128/7399/7399355.png" width={60} height={60} /> JOY
-            </span>
+          <Navbar.Brand as={Link} to="/">
+            <Image src="/src/assets/logo_give_joy.gif" width={110} />
           </Navbar.Brand>
-          <Navbar.Toggle aria-controls="navbarScroll" />
+          <Navbar.Toggle aria-controls="navbarScroll" onClick={() => setExpanded(!expanded)} />
           <Navbar.Collapse id="navbarScroll">
-            <Nav className="me-auto my-2 my-lg-0">
-              <Link id="navbar-link-custom" className={`nav-link text-light ${location.pathname === "/" ? "active" : ""} `} to="/">
+            <Nav className="me-auto  my-lg-0">
+              <Link id="navbar-link-custom" className={`nav-link text-light ${location.pathname === "/" ? "active" : ""} `} to="/" onClick={handleNavLinkClick}>
                 HOME
               </Link>
-              <Link id="navbar-link-custom" className={`nav-link text-light ${location.pathname === "/ospedali" ? "active" : ""} `} to="/ospedali">
+              <Link
+                id="navbar-link-custom"
+                className={`nav-link text-light ${location.pathname === "/ospedali" ? "active" : ""} `}
+                to="/ospedali"
+                onClick={handleNavLinkClick}
+              >
                 OSPEDALI
               </Link>
-              <Link id="navbar-link-custom" className={`nav-link text-light ${location.pathname === "/eventi" ? "active" : ""} `} to="/eventi">
+              <Link
+                id="navbar-link-custom"
+                className={`nav-link text-light ${location.pathname === "/eventi" ? "active" : ""} `}
+                to="/eventi"
+                onClick={handleNavLinkClick}
+              >
                 EVENTI
+              </Link>
+              <Link
+                id="navbar-link-custom"
+                className={`nav-link text-light ${location.pathname === "/chi-siamo" ? "active" : ""}`}
+                to="/chi-siamo"
+                onClick={handleNavLinkClick}
+              >
+                CHI SIAMO
               </Link>
 
               {/*  Link Profilo visibile solo agli utenti normali */}
               {user && !user.isAdmin && (
-                <Link id="navbar-link-custom" className={`nav-link text-light ${location.pathname === "/profilo" ? "active" : ""} `} to="/profilo">
+                <Link
+                  id="navbar-link-custom"
+                  className={`nav-link text-light ${location.pathname === "/profilo" ? "active" : ""} `}
+                  to="/profilo"
+                  onClick={handleNavLinkClick}
+                >
                   PROFILO
                 </Link>
               )}

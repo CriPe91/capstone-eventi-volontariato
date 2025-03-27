@@ -4,7 +4,7 @@ import { http } from "../../shared/utils/http";
 import { useSelector } from "react-redux";
 import { selectIsAdmin, selectUser } from "../../redux/authSlice";
 import { Link, useNavigate } from "react-router-dom";
-import { People, PencilSquare, Trash } from "react-bootstrap-icons";
+import { People, PencilSquare, Trash, Plus, ArrowLeft } from "react-bootstrap-icons";
 
 const BackOfficeEventi = () => {
   const [eventi, setEventi] = useState([]);
@@ -153,15 +153,17 @@ const BackOfficeEventi = () => {
         <Container fluid className="mt-5">
           <Row className="d-flex justify-content-between align-items-center mb-4">
             <Col xs={12} md={6}>
-              <h1 className="text-primary">Gestione Eventi</h1>
+              <h1 className="">Gestione Eventi</h1>
             </Col>
-            <Col xs={12} md={6} className="d-flex justify-content-md-end justify-content-start">
-              <Button variant="primary" className="me-2 text-light" onClick={() => setShowCreate(true)}>
-                ➕ Aggiungi Evento
+            <Col xs={12} md={6} className="d-flex justify-content-md-end justify-content-start gap-2">
+              <Button variant="outline-success" onClick={() => setShowCreate(true)}>
+                <Plus className="me-1" size={18} />
+                Aggiungi Evento
               </Button>
               <Link to="/eventi">
-                <Button variant="secondary" className="text-light">
-                  ⬅️ Torna agli Eventi
+                <Button variant="outline-warning">
+                  <ArrowLeft className="me-1" size={18} />
+                  Torna agli Eventi
                 </Button>
               </Link>
             </Col>

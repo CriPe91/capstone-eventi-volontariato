@@ -16,7 +16,7 @@ const HomePage = () => {
             alt="Volontari giocano con i bambini"
           />
           <Carousel.Caption>
-            <h2>Giochi e Intrattenimento</h2>
+            <h2 className="text-light">Giochi e Intrattenimento</h2>
             <p className="text-light">Il gioco è una terapia potente che aiuta i bambini a sentirsi meno soli.</p>
           </Carousel.Caption>
         </Carousel.Item>
@@ -28,7 +28,7 @@ const HomePage = () => {
             alt="Lettura di favole ai bambini"
           />
           <Carousel.Caption>
-            <h2>Storie e Fantasia</h2>
+            <h2 className="text-light">Storie e Fantasia</h2>
             <p className="text-light">Un libro può trasportare un bambino in un mondo magico anche dal letto d’ospedale.</p>
           </Carousel.Caption>
         </Carousel.Item>
@@ -40,7 +40,7 @@ const HomePage = () => {
             alt="Artisti e musica per i bambini"
           />
           <Carousel.Caption>
-            <h2>Musica e Creatività</h2>
+            <h2 className="text-light">Musica e Creatività</h2>
             <p className="text-light">La musica e il disegno aiutano a ridurre lo stress e a migliorare l'umore.</p>
           </Carousel.Caption>
         </Carousel.Item>
@@ -160,7 +160,7 @@ const HomePage = () => {
               ospedale un’esperienza più leggera. Ogni volontario diventa parte di una grande famiglia che condivide l’obiettivo comune di portare gioia ai
               bambini in difficoltà. La solidarietà, il rispetto e l’empatia sono i valori fondamentali che guidano ogni nostra iniziativa.
             </p>
-            <Button variant="outline-dark" className="button align-items-center fw-bold" to="/chisiamo">
+            <Button variant="outline-dark" className="button align-items-center fw-bold" as={Link} to="/chi-siamo">
               <span className="">Scopri come diventare un volontario </span>
             </Button>
           </Col>
