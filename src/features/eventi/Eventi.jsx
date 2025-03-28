@@ -135,7 +135,7 @@ const Eventi = () => {
 
             return (
               <Col key={evento.id} xs={12} md={6} lg={4} className="d-flex">
-                <Card className="card-eventi shadow-lg p-3 mb-4 d-flex flex-column h-100">
+                <Card className="card-eventi  p-3 mb-4 d-flex flex-column h-100">
                   <Card.Img
                     variant="top"
                     src={evento.imgEvento}
@@ -144,11 +144,17 @@ const Eventi = () => {
                     style={{ height: "250px", objectFit: "cover", width: "100%" }}
                   />
                   <Card.Body className="d-flex flex-column">
-                    <Card.Title className="eventi-title">{evento.titolo}</Card.Title>
+                    <Card.Title className="eventi-title mb-3 fw-bold">{evento.titolo}</Card.Title>
                     <Card.Text>
-                      📅 <strong>Data:</strong> {evento.data} <br />
-                      🏥 <strong>Ospedale:</strong> {evento.ospedale.nome} <br />
-                      📝 <strong>Descrizione:</strong> {evento.descrizione}
+                      <p>
+                        📅 <strong>Data:</strong> {evento.data}
+                      </p>
+                      <p>
+                        🏥 <strong>Ospedale:</strong> {evento.ospedale.nome}
+                      </p>
+                      <p>
+                        📝 <strong>Descrizione:</strong> {evento.descrizione}
+                      </p>
                     </Card.Text>
 
                     {!!user && !user?.isAdmin && (

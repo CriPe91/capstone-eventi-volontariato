@@ -3,6 +3,10 @@ import "./HomePage.css";
 import { Link } from "react-router-dom";
 
 const HomePage = () => {
+  const handleButtonClick = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
     <>
       {/* Carosello di Immagini */}
@@ -160,7 +164,7 @@ const HomePage = () => {
               ospedale un’esperienza più leggera. Ogni volontario diventa parte di una grande famiglia che condivide l’obiettivo comune di portare gioia ai
               bambini in difficoltà. La solidarietà, il rispetto e l’empatia sono i valori fondamentali che guidano ogni nostra iniziativa.
             </p>
-            <Button variant="outline-dark" className="button align-items-center fw-bold" as={Link} to="/chi-siamo">
+            <Button variant="outline-dark" className="button align-items-center fw-bold" as={Link} to="/chi-siamo" onClick={handleButtonClick}>
               <span className="">Scopri come diventare un volontario </span>
             </Button>
           </Col>

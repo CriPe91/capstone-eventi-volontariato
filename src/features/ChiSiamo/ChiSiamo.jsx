@@ -4,6 +4,10 @@ import { Link } from "react-router-dom";
 import "../ChiSiamo/ChiSiamoCss.css";
 
 const ChiSiamo = () => {
+  const handleButtonClick = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
     <Container fluid id="chi-container">
       {/* Titolo e paragrafo introduttivo */}
@@ -172,7 +176,7 @@ const ChiSiamo = () => {
           <p className="mb-3 fs-5 mt-3">
             Diventa volontario e porta anche tu un sorriso in corsia. Non servono competenze specifiche, solo cuore e voglia di esserci.
           </p>
-          <Button as={Link} to="/eventi" variant="outline-primary" className="fw-semibold">
+          <Button as={Link} to="/eventi" variant="outline-primary" className="fw-semibold" onClick={handleButtonClick}>
             Scopri come partecipare
           </Button>
         </Col>

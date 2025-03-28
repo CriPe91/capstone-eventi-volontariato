@@ -61,7 +61,7 @@ const Ospedali = () => {
         ) : ospedali.length > 0 ? (
           ospedali.map((ospedale) => (
             <Col key={ospedale.id} xs={12} md={6} lg={4} className="d-flex align-items-stretch">
-              <Card className="card-ospedali shadow-lg p-3 mb-4 d-flex flex-column w-100">
+              <Card className="card-ospedali  p-3 mb-4 d-flex flex-column w-100">
                 <Card.Img
                   variant="top"
                   src={ospedale.imgOspedale}
@@ -70,10 +70,14 @@ const Ospedali = () => {
                   style={{ height: "250px", objectFit: "cover", width: "100%" }}
                 />
                 <Card.Body className="d-flex flex-column">
-                  <Card.Title className="ospedale-title">{ospedale.nome}</Card.Title>
+                  <Card.Title className="ospedale-title mb-3 fw-bold">{ospedale.nome}</Card.Title>
                   <Card.Text>
-                    📍 <strong>Indirizzo:</strong> {ospedale.indirizzo} <br />
-                    ✉️ <strong>Email:</strong> {ospedale.email}
+                    <p>
+                      📍 <strong>Indirizzo:</strong> {ospedale.indirizzo}
+                    </p>
+                    <p>
+                      ✉️ <strong>Email:</strong> {ospedale.email}
+                    </p>
                   </Card.Text>
                 </Card.Body>
               </Card>
